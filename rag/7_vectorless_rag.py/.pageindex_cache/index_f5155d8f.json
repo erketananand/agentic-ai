@@ -1,0 +1,392 @@
+{
+  "title": "sample_project",
+  "node_id": "root",
+  "summary": "The sample_project package appears to be a comprehensive Python application that provides a search index, along with various supporting features such as authentication, billing, and reporting.",
+  "is_leaf": false,
+  "nodes": [
+    {
+      "title": "audit_log.py",
+      "node_id": "audit_log.py",
+      "summary": "Here's a 1-2 sentence summary of the Python file for a search index:\n\n`audit_log.py` is a Python module that provides an in-memory audit log system, recording state-changing operations such as task and user creations, updates, and deletions, along with login events and permission denials. The module includes classes for defining audit events and logging them, as well as methods for retrieving specific events by user, target, or event type.",
+      "is_leaf": false,
+      "nodes": [
+        {
+          "title": "chunk_1",
+          "node_id": "audit_log.py::chunk_1",
+          "summary": "\"\"\"",
+          "is_leaf": true,
+          "content": "\"\"\"\naudit_log.py \u2014 Append-only audit trail for all state-changing operations.\nEvery create / update / delete action on tasks and users is recorded here.\n\"\"\"\n\nfrom dataclasses import dataclass, field\nfrom datetime import datetime\nfrom enum import Enum\nfrom typing import Optional\n\n\nclass AuditEventType(Enum):\n    TASK_CREATED = \"task_created\"\n    TASK_COMPLETED = \"task_completed\"\n    TASK_DELETED = \"task_deleted\"\n    TASK_ASSIGNED = \"task_assigned\"\n    USER_REGISTERED = \"user_registered\"\n    USER_DEACTIVATED = \"user_deactivated\"\n    LOGIN_SUCCESS = \"login_success\"\n    LOGIN_FAILURE = \"login_failure\"\n    PERMISSION_DENIED = \"permission_denied\"\n\n\n@dataclass\nclass AuditEntry:\n    event_type: AuditEventType\n    actor_id: Optional[int]          # user who triggered the event\n    target_id: Optional[int]         # resource affected (task_id or user_id)\n    detail: str\n    timestamp: datetime = field(default_factory=datetime.utcnow)",
+          "nodes": []
+        },
+        {
+          "title": "chunk_2",
+          "node_id": "audit_log.py::chunk_2",
+          "summary": "class AuditLogger:",
+          "is_leaf": true,
+          "content": "class AuditLogger:\n    \"\"\"In-memory audit log. In production this would write to a DB table.\"\"\"\n\n    def __init__(self):\n        self._log: list[AuditEntry] = []\n\n    def record(\n        self,\n        event_type: AuditEventType,\n        actor_id: Optional[int] = None,\n        target_id: Optional[int] = None,\n        detail: str = \"\",\n    ) -> AuditEntry:\n        entry = AuditEntry(\n            event_type=event_type,\n            actor_id=actor_id,\n            target_id=target_id,\n            detail=detail,\n        )\n        self._log.append(entry)\n        return entry\n\n    def get_events_for_user(self, user_id: int) -> list[AuditEntry]:\n        return [e for e in self._log if e.actor_id == user_id]\n\n    def get_events_for_target(self, target_id: int) -> list[AuditEntry]:\n        return [e for e in self._log if e.target_id == target_id]\n\n    def get_events_by_type(self, event_type: AuditEventType) -> list[AuditEntry]:\n        return [e for e in self._log if e.event_type == event_type]\n\n    def all_entries(self) -> list[AuditEntry]:\n        return list(self._log)",
+          "nodes": []
+        }
+      ]
+    },
+    {
+      "title": "auth.py",
+      "node_id": "auth.py",
+      "summary": "Here's a 1-2 sentence summary of the Python file for a search index:\n\n`auth.py` is a simple authentication layer that handles user registration, login, and session management using a plaintext password store (not recommended for production use). It provides methods for creating users, validating credentials, and managing session tokens.",
+      "is_leaf": false,
+      "nodes": [
+        {
+          "title": "chunk_1",
+          "node_id": "auth.py::chunk_1",
+          "summary": "\"\"\"",
+          "is_leaf": true,
+          "content": "\"\"\"\nauth.py \u2014 Simple authentication layer.\nUses plaintext passwords for demo simplicity.\nNOTE: In production always hash passwords (e.g. bcrypt).\n\"\"\"\n\nfrom database import Database\nfrom models import User\n\n\nclass AuthError(Exception):\n    \"\"\"Raised when authentication or authorisation fails.\"\"\"\n    pass",
+          "nodes": []
+        },
+        {
+          "title": "chunk_2",
+          "node_id": "auth.py::chunk_2",
+          "summary": "class AuthService:",
+          "is_leaf": true,
+          "content": "class AuthService:\n    \"\"\"Handles login and basic access control.\"\"\"\n\n    def __init__(self, db: Database):\n        self.db = db\n        # In-memory session store: token \u2192 user_id\n        # In production use JWT or a proper session backend\n        self._sessions: dict[str, int] = {}\n\n    def register(self, username: str, email: str, password: str) -> User:\n        \"\"\"Create a new user. Raises AuthError if email already exists.\"\"\"\n        if self.db.get_user_by_email(email):\n            raise AuthError(f\"Email already registered: {email}\")\n        user = self.db.create_user(username, email)\n        # Store password against user id (plaintext \u2014 demo only!)\n        self._passwords = getattr(self, \"_passwords\", {})\n        self._passwords[user.id] = password\n        return user\n\n    def login(self, email: str, password: str) -> str:\n        \"\"\"\n        Validate credentials and return a session token.\n        Token is just the user id as a string \u2014 demo only.\n        \"\"\"\n        user = self.db.get_user_by_email(email)\n        if not user:\n            raise AuthError(\"User not found\")\n        stored = getattr(self, \"_passwords\", {}).get(user.id)\n        if stored != password:\n            raise AuthError(\"Invalid password\")\n        token = f\"token-{user.id}\"\n        self._sessions[token] = user.id\n        return token",
+          "nodes": []
+        },
+        {
+          "title": "chunk_3",
+          "node_id": "auth.py::chunk_3",
+          "summary": "def get_current_user(self, token: str) -> User:",
+          "is_leaf": true,
+          "content": "def get_current_user(self, token: str) -> User:\n        \"\"\"Resolve a session token to a User. Raises AuthError if invalid.\"\"\"\n        user_id = self._sessions.get(token)\n        if user_id is None:\n            raise AuthError(\"Invalid or expired session token\")\n        user = self.db.get_user(user_id)\n        if not user or not user.is_active:\n            raise AuthError(\"User account is inactive\")\n        return user\n\n    def logout(self, token: str) -> None:\n        \"\"\"Invalidate a session token.\"\"\"\n        self._sessions.pop(token, None)",
+          "nodes": []
+        }
+      ]
+    },
+    {
+      "title": "billing.py",
+      "node_id": "billing.py",
+      "summary": "Here's a 1-2 sentence summary of the Python file for a search index:\n\n`billing.py` is a Python module that implements plan-based feature gating and usage enforcement for users, capping the number of tasks they can create based on their assigned plan tier. It provides a `BillingService` class to manage user plans, check task limits, and generate usage summaries.",
+      "is_leaf": false,
+      "nodes": [
+        {
+          "title": "chunk_1",
+          "node_id": "billing.py::chunk_1",
+          "summary": "\"\"\"",
+          "is_leaf": true,
+          "content": "\"\"\"\nbilling.py \u2014 Plan-based feature gating and usage enforcement.\nEach user is on a plan tier that caps how many tasks they can create.\n\"\"\"\n\nfrom enum import Enum\nfrom models import User\nfrom database import Database\n\n\nclass PlanTier(Enum):\n    FREE = \"free\"\n    PRO = \"pro\"\n    ENTERPRISE = \"enterprise\"\n\n\n# Task creation limits per plan_tier\nTASK_LIMITS: dict[str, int] = {\n    PlanTier.FREE.value: 10,\n    PlanTier.PRO.value: 200,\n    PlanTier.ENTERPRISE.value: 10_000,\n}\n\n# In-memory plan store: user_id \u2192 plan_tier\n_user_plans: dict[int, str] = {}\n\n\nclass BillingError(Exception):\n    pass",
+          "nodes": []
+        },
+        {
+          "title": "chunk_2",
+          "node_id": "billing.py::chunk_2",
+          "summary": "class BillingService:",
+          "is_leaf": true,
+          "content": "class BillingService:\n    \"\"\"Enforces plan_tier limits before allowing resource-creating operations.\"\"\"\n\n    def __init__(self, db: Database):\n        self.db = db\n\n    def assign_plan(self, user: User, plan: PlanTier) -> None:\n        _user_plans[user.id] = plan.value\n\n    def get_plan(self, user: User) -> str:\n        return _user_plans.get(user.id, PlanTier.FREE.value)\n\n    def check_task_limit(self, user: User) -> None:\n        \"\"\"Raise BillingError if user has reached their plan_tier task cap.\"\"\"\n        plan = self.get_plan(user)\n        limit = TASK_LIMITS.get(plan, TASK_LIMITS[PlanTier.FREE.value])\n        current_count = len(self.db.list_tasks(owner_id=user.id))\n        if current_count >= limit:\n            raise BillingError(\n                f\"Task limit reached for plan '{plan}': {current_count}/{limit}. \"\n                \"Upgrade your plan_tier to create more tasks.\"\n            )\n\n    def usage_summary(self, user: User) -> dict:\n        plan = self.get_plan(user)\n        limit = TASK_LIMITS.get(plan, TASK_LIMITS[PlanTier.FREE.value])\n        used = len(self.db.list_tasks(owner_id=user.id))\n        return {\"plan_tier\": plan, \"tasks_used\": used, \"tasks_limit\": limit}",
+          "nodes": []
+        }
+      ]
+    },
+    {
+      "title": "database.py",
+      "node_id": "database.py",
+      "summary": "Here's a 1-2 sentence summary of the Python file for a search index:\n\n`database.py` is a simple in-memory database layer for a task management app, providing basic CRUD operations for users and tasks, as well as search functionality for tasks by keyword. It uses a dictionary-based data store for users and tasks, with methods for creating, reading, updating, and deleting data.",
+      "is_leaf": false,
+      "nodes": [
+        {
+          "title": "chunk_1",
+          "node_id": "database.py::chunk_1",
+          "summary": "\"\"\"",
+          "is_leaf": true,
+          "content": "\"\"\"\ndatabase.py \u2014 In-memory database layer for the task management app.\nIn a real app this would use SQLAlchemy or similar. Kept simple for demos.\n\"\"\"\n\nfrom typing import Optional\nfrom models import Task, User, Status, Priority",
+          "nodes": []
+        },
+        {
+          "title": "chunk_2",
+          "node_id": "database.py::chunk_2",
+          "summary": "class Database:",
+          "is_leaf": true,
+          "content": "class Database:\n    \"\"\"Simple in-memory store \u2014 a dict per table, keyed by id.\"\"\"\n\n    def __init__(self):\n        self._users: dict[int, User] = {}\n        self._tasks: dict[int, Task] = {}\n        self._next_user_id = 1\n        self._next_task_id = 1\n\n    # ------------------------------------------------------------------\n    # Users\n    # ------------------------------------------------------------------\n\n    def create_user(self, username: str, email: str) -> User:\n        user = User(id=self._next_user_id, username=username, email=email)\n        self._users[user.id] = user\n        self._next_user_id += 1\n        return user\n\n    def get_user(self, user_id: int) -> Optional[User]:\n        return self._users.get(user_id)\n\n    def get_user_by_email(self, email: str) -> Optional[User]:\n        for user in self._users.values():\n            if user.email == email:\n                return user\n        return None\n\n    def list_users(self) -> list[User]:\n        return list(self._users.values())\n\n    # ------------------------------------------------------------------\n    # Tasks\n    # ------------------------------------------------------------------",
+          "nodes": []
+        },
+        {
+          "title": "chunk_3",
+          "node_id": "database.py::chunk_3",
+          "summary": "def create_task(",
+          "is_leaf": true,
+          "content": "def create_task(\n        self,\n        title: str,\n        description: str,\n        owner_id: int,\n        priority: Priority = Priority.MEDIUM,\n        tags: list[str] = None,\n    ) -> Task:\n        task = Task(\n            id=self._next_task_id,\n            title=title,\n            description=description,\n            owner_id=owner_id,\n            priority=priority,\n            tags=tags or [],\n        )\n        self._tasks[task.id] = task\n        self._next_task_id += 1\n        return task\n\n    def get_task(self, task_id: int) -> Optional[Task]:\n        return self._tasks.get(task_id)\n\n    def update_task_status(self, task_id: int, status: Status) -> Optional[Task]:\n        task = self._tasks.get(task_id)\n        if task:\n            task.status = status\n        return task\n\n    def list_tasks(self, owner_id: Optional[int] = None) -> list[Task]:\n        tasks = list(self._tasks.values())\n        if owner_id is not None:\n            tasks = [t for t in tasks if t.owner_id == owner_id]\n        return tasks\n\n    def delete_task(self, task_id: int) -> bool:\n        if task_id in self._tasks:\n            del self._tasks[task_id]\n            return True\n        return False",
+          "nodes": []
+        },
+        {
+          "title": "chunk_4",
+          "node_id": "database.py::chunk_4",
+          "summary": "def search_tasks(self, keyword: str) -> list[Task]:",
+          "is_leaf": true,
+          "content": "def search_tasks(self, keyword: str) -> list[Task]:\n        \"\"\"Search tasks by keyword in title or description (case-insensitive).\"\"\"\n        keyword = keyword.lower()\n        return [\n            t for t in self._tasks.values()\n            if keyword in t.title.lower() or keyword in t.description.lower()\n        ]",
+          "nodes": []
+        }
+      ]
+    },
+    {
+      "title": "integrations",
+      "node_id": "integrations",
+      "summary": "The \"integrations\" package appears to provide integration modules for interacting with external services, specifically including email clients and Slack webhooks.",
+      "is_leaf": false,
+      "nodes": [
+        {
+          "title": "email_client.py",
+          "node_id": "integrations/email_client.py",
+          "summary": "Here's a 1-2 sentence summary of the Python file for a search index:\n\n`email_client.py`: A thin SMTP wrapper class `EmailClient` that sends transactional emails, currently printing to stdout for demo purposes, with an in-memory outbox for testing.",
+          "is_leaf": false,
+          "nodes": [
+            {
+              "title": "chunk_1",
+              "node_id": "integrations/email_client.py::chunk_1",
+              "summary": "\"\"\"",
+              "is_leaf": true,
+              "content": "\"\"\"\nintegrations/email_client.py \u2014 Thin SMTP wrapper.\nIn production this would use SendGrid / SES. Prints to stdout for demo.\n\"\"\"\n\nfrom dataclasses import dataclass\n\n\n@dataclass\nclass EmailMessage:\n    to_address: str\n    subject: str\n    body: str\n\n\nclass EmailClient:\n    \"\"\"Sends transactional emails. Swap send() for a real SMTP call in prod.\"\"\"\n\n    def __init__(self, from_address: str = \"noreply@taskapp.dev\"):\n        self.from_address = from_address\n        self._sent: list[EmailMessage] = []   # in-memory outbox for testing\n\n    def send(self, message: EmailMessage) -> None:\n        self._sent.append(message)\n        print(\n            f\"[EMAIL] To: {message.to_address} | \"\n            f\"Subject: {message.subject}\"\n        )\n\n    def sent_messages(self) -> list[EmailMessage]:\n        return list(self._sent)",
+              "nodes": []
+            }
+          ]
+        },
+        {
+          "title": "slack_webhook.py",
+          "node_id": "integrations/slack_webhook.py",
+          "summary": "Here's a 1-2 sentence summary of the Python file for a search index:\n\n`integrations/slack_webhook.py`: A Python class `SlackWebhook` that posts messages to a Slack channel via webhook, with a demo mode that prints to stdout instead of making a real HTTP call.",
+          "is_leaf": false,
+          "nodes": [
+            {
+              "title": "chunk_1",
+              "node_id": "integrations/slack_webhook.py::chunk_1",
+              "summary": "\"\"\"",
+              "is_leaf": true,
+              "content": "\"\"\"\nintegrations/slack_webhook.py \u2014 Posts messages to a Slack channel via webhook.\nPrints to stdout in demo mode (no real HTTP call).\n\"\"\"\n\n\nclass SlackWebhook:\n    \"\"\"Wraps a Slack incoming webhook URL.\"\"\"\n\n    def __init__(self, webhook_url: str = \"https://hooks.slack.com/demo\"):\n        self.webhook_url = webhook_url\n        self._posted: list[str] = []   # captured messages for testing\n\n    def post(self, text: str) -> None:\n        self._posted.append(text)\n        print(f\"[SLACK] {text}\")\n\n    def posted_messages(self) -> list[str]:\n        return list(self._posted)",
+              "nodes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "main.py",
+      "node_id": "main.py",
+      "summary": "Here is a 1-2 sentence summary of the Python file `main.py` for a search index:\n\n`main.py` is the entry point for a task management application, which sets up and tests various services including authentication, task management, billing, and scheduling, and seeds the database with users and tasks. The file demonstrates the application's functionality by creating users, assigning roles and plans, creating tasks, completing tasks, and setting up recurring scheduled tasks.",
+      "is_leaf": false,
+      "nodes": [
+        {
+          "title": "chunk_1",
+          "node_id": "main.py::chunk_1",
+          "summary": "\"\"\"",
+          "is_leaf": true,
+          "content": "\"\"\"\nmain.py \u2014 Entry point / CLI for the task management app.\nWires all layers together: Database \u2192 AuthService \u2192 TaskService + supporting services.\n\nRun:\n    python main.py\n\"\"\"\n\nfrom database import Database\nfrom auth import AuthService\nfrom task_service import TaskService\nfrom permissions import PermissionPolicy, Role\nfrom billing import BillingService, PlanTier\nfrom audit_log import AuditLogger\nfrom notifications import NotificationService\nfrom reports import ReportService\nfrom scheduler import TaskScheduler, RecurrenceInterval\nfrom integrations.email_client import EmailClient\nfrom integrations.slack_webhook import SlackWebhook\nfrom models import Priority",
+          "nodes": []
+        },
+        {
+          "title": "chunk_2",
+          "node_id": "main.py::chunk_2",
+          "summary": "def main():",
+          "is_leaf": true,
+          "content": "def main():\n    # --- wire up all layers ---\n    db = Database()\n    auth = AuthService(db)\n    policy = PermissionPolicy()\n    billing = BillingService(db)\n    audit = AuditLogger()\n    email = EmailClient()\n    slack = SlackWebhook()\n    notifications = NotificationService(email, slack)\n    tasks = TaskService(db, auth, policy, billing, audit, notifications)\n    reports = ReportService(db, policy)\n    scheduler = TaskScheduler(db, billing, audit)\n\n    # --- seed users ---\n    alice = auth.register(\"alice\", \"alice@example.com\", \"pass123\")\n    bob = auth.register(\"bob\", \"bob@example.com\", \"pass456\")\n    admin = auth.register(\"admin\", \"admin@taskapp.dev\", \"adminpass\")\n\n    policy.assign_role(admin, Role.ADMIN)\n    policy.assign_role(alice, Role.MEMBER)\n    policy.assign_role(bob, Role.MEMBER)\n\n    billing.assign_plan(alice, PlanTier.PRO)\n    billing.assign_plan(bob, PlanTier.FREE)\n\n    alice_token = auth.login(\"alice@example.com\", \"pass123\")\n    bob_token = auth.login(\"bob@example.com\", \"pass456\")\n    admin_token = auth.login(\"admin@taskapp.dev\", \"adminpass\")\n\n    # --- seed tasks ---\n    tasks.create_task(alice_token, \"Set up CI pipeline\", \"Configure GitHub Actions for the repo\", Priority.HIGH, tags=[\"devops\"])\n    tasks.create_task(alice_token, \"Write unit tests\", \"Cover auth and task_service modules\", Priority.MEDIUM, tags=[\"testing\"])\n    tasks.create_task(bob_token, \"Design database schema\", \"Plan the production PostgreSQL schema\", Priority.HIGH, tags=[\"database\"])",
+          "nodes": []
+        },
+        {
+          "title": "chunk_3",
+          "node_id": "main.py::chunk_3",
+          "summary": "# --- complete a task ---",
+          "is_leaf": true,
+          "content": "# --- complete a task ---\n    alice_tasks = tasks.list_my_tasks(alice_token)\n    tasks.complete_task(alice_token, alice_tasks[0].id)\n\n    # --- set up a recurring scheduled task for alice ---\n    scheduler.add_schedule(\n        owner=alice,\n        title=\"Weekly status report\",\n        description=\"Summarise progress and blockers for the team\",\n        priority=Priority.LOW,\n        interval=RecurrenceInterval.WEEKLY,\n        tags=[\"recurring\"],\n    )\n\n    # --- print summary ---\n    print(\"=== Alice's tasks ===\")\n    for t in tasks.list_my_tasks(alice_token):\n        print(f\"  [{t.status.value}] {t.title} (priority={t.priority.value})\")\n\n    print(\"\\n=== Bob's tasks ===\")\n    for t in tasks.list_my_tasks(bob_token):\n        print(f\"  [{t.status.value}] {t.title} (priority={t.priority.value})\")\n\n    print(\"\\n=== Search 'test' ===\")\n    for t in tasks.search_tasks(alice_token, \"test\"):\n        print(f\"  {t.title}\")\n\n    print(\"\\n=== System report (admin) ===\")\n    r = reports.system_report(admin)\n    print(f\"  Users: {r.total_users}, Tasks: {r.total_tasks}, Done: {r.completed_tasks}\")\n    print(f\"  By priority: {r.tasks_by_priority}\")\n\n    print(\"\\n=== Audit log ===\")\n    for entry in audit.all_entries():\n        print(f\"  [{entry.event_type.value}] actor={entry.actor_id} target={entry.target_id}\")\n\n\nif __name__ == \"__main__\":\n    main()",
+          "nodes": []
+        }
+      ]
+    },
+    {
+      "title": "models.py",
+      "node_id": "models.py",
+      "summary": "Here's a 1-2 sentence summary of the Python file for a search index:\n\n`models.py` defines data models for a task management app using Python dataclasses, including `User` and `Task` classes with attributes such as id, username, email, title, description, priority, status, and due date. The `Task` class also includes a method to check if a task is overdue.",
+      "is_leaf": false,
+      "nodes": [
+        {
+          "title": "chunk_1",
+          "node_id": "models.py::chunk_1",
+          "summary": "\"\"\"",
+          "is_leaf": true,
+          "content": "\"\"\"\nmodels.py \u2014 Data models for the task management app.\nUses Python dataclasses (no ORM, keeping it simple for demo purposes).\n\"\"\"\n\nfrom dataclasses import dataclass, field\nfrom datetime import datetime\nfrom enum import Enum\nfrom typing import Optional\n\n\nclass Priority(Enum):\n    LOW = \"low\"\n    MEDIUM = \"medium\"\n    HIGH = \"high\"\n\n\nclass Status(Enum):\n    TODO = \"todo\"\n    IN_PROGRESS = \"in_progress\"\n    DONE = \"done\"\n\n\n@dataclass\nclass User:\n    id: int\n    username: str\n    email: str\n    created_at: datetime = field(default_factory=datetime.utcnow)\n    is_active: bool = True\n\n\n@dataclass\nclass Task:\n    id: int\n    title: str\n    description: str\n    owner_id: int                          # references User.id\n    priority: Priority = Priority.MEDIUM\n    status: Status = Status.TODO\n    due_date: Optional[datetime] = None\n    created_at: datetime = field(default_factory=datetime.utcnow)\n    updated_at: datetime = field(default_factory=datetime.utcnow)\n    tags: list[str] = field(default_factory=list)\n\n    def is_overdue(self) -> bool:\n        \"\"\"Return True if task is past due and not yet done.\"\"\"\n        if self.due_date is None:\n            return False\n        return datetime.utcnow() > self.due_date and self.status != Status.DONE",
+          "nodes": []
+        }
+      ]
+    },
+    {
+      "title": "notifications.py",
+      "node_id": "notifications.py",
+      "summary": "Here's a 1-2 sentence summary of the Python file for a search index:\n\n`notifications.py` is a Python module that sends email and Slack notifications for task lifecycle events, such as creation, completion, deletion, and assignment, using the Task and User models. It utilizes the EmailClient and SlackWebhook integrations to dispatch notifications.",
+      "is_leaf": false,
+      "nodes": [
+        {
+          "title": "chunk_1",
+          "node_id": "notifications.py::chunk_1",
+          "summary": "\"\"\"",
+          "is_leaf": true,
+          "content": "\"\"\"\nnotifications.py \u2014 Sends email and Slack alerts on task lifecycle events.\nCalled by TaskService after every state-changing operation.\n\"\"\"\n\nfrom models import Task, User\nfrom integrations.email_client import EmailClient, EmailMessage\nfrom integrations.slack_webhook import SlackWebhook",
+          "nodes": []
+        },
+        {
+          "title": "chunk_2",
+          "node_id": "notifications.py::chunk_2",
+          "summary": "class NotificationService:",
+          "is_leaf": true,
+          "content": "class NotificationService:\n    \"\"\"Dispatches email + Slack notifications for task events.\"\"\"\n\n    def __init__(self, email_client: EmailClient, slack: SlackWebhook):\n        self.email = email_client\n        self.slack = slack\n\n    def on_task_created(self, task: Task, owner: User) -> None:\n        self.email.send(EmailMessage(\n            to_address=owner.email,\n            subject=f\"Task created: {task.title}\",\n            body=(\n                f\"Hi {owner.username},\\n\\n\"\n                f\"Your task '{task.title}' has been created \"\n                f\"with priority '{task.priority.value}'.\\n\"\n            ),\n        ))\n        self.slack.post(\n            f\":memo: New task by *{owner.username}*: {task.title} \"\n            f\"[{task.priority.value}]\"\n        )\n\n    def on_task_completed(self, task: Task, owner: User) -> None:\n        self.email.send(EmailMessage(\n            to_address=owner.email,\n            subject=f\"Task completed: {task.title}\",\n            body=(\n                f\"Hi {owner.username},\\n\\n\"\n                f\"Great work! Task '{task.title}' has been marked as done.\\n\"\n            ),\n        ))\n        self.slack.post(\n            f\":white_check_mark: Task completed by *{owner.username}*: {task.title}\"\n        )\n\n    def on_task_deleted(self, task: Task, owner: User) -> None:\n        self.slack.post(\n            f\":wastebasket: Task deleted by *{owner.username}*: {task.title}\"\n        )",
+          "nodes": []
+        },
+        {
+          "title": "chunk_3",
+          "node_id": "notifications.py::chunk_3",
+          "summary": "def on_task_assigned(self, task: Task, assignee: User, assigner: User) -> None:",
+          "is_leaf": true,
+          "content": "def on_task_assigned(self, task: Task, assignee: User, assigner: User) -> None:\n        self.email.send(EmailMessage(\n            to_address=assignee.email,\n            subject=f\"Task assigned to you: {task.title}\",\n            body=(\n                f\"Hi {assignee.username},\\n\\n\"\n                f\"{assigner.username} assigned you the task '{task.title}'.\\n\"\n            ),\n        ))\n        self.slack.post(\n            f\":incoming_envelope: *{assigner.username}* assigned \"\n            f\"'{task.title}' to *{assignee.username}*\"\n        )",
+          "nodes": []
+        }
+      ]
+    },
+    {
+      "title": "permissions.py",
+      "node_id": "permissions.py",
+      "summary": "Here's a 1-2 sentence summary of the Python file for a search index:\n\n`permissions.py`: A role-based access control policy that defines permissions for users with different roles (admin, member, viewer) and checks whether a user is allowed to perform a given action. It uses an in-memory role store and raises a `PermissionError` if a user's role does not allow an action.",
+      "is_leaf": false,
+      "nodes": [
+        {
+          "title": "chunk_1",
+          "node_id": "permissions.py::chunk_1",
+          "summary": "\"\"\"",
+          "is_leaf": true,
+          "content": "\"\"\"\npermissions.py \u2014 Role-based access control policy.\nDefines what each role (admin, member, viewer) can do.\n\"\"\"\n\nfrom enum import Enum\nfrom models import User\n\n\nclass Role(Enum):\n    ADMIN = \"admin\"\n    MEMBER = \"member\"\n    VIEWER = \"viewer\"\n\n\n# Maps role \u2192 set of allowed action strings\nROLE_PERMISSIONS: dict[str, set[str]] = {\n    Role.ADMIN.value: {\n        \"task:create\", \"task:complete\", \"task:delete\", \"task:view\",\n        \"task:assign\", \"report:view\", \"user:manage\", \"billing:view\",\n    },\n    Role.MEMBER.value: {\n        \"task:create\", \"task:complete\", \"task:delete\", \"task:view\",\n        \"report:view\",\n    },\n    Role.VIEWER.value: {\n        \"task:view\",\n    },\n}\n\n# In-memory role store: user_id \u2192 role (default MEMBER)\n_user_roles: dict[int, str] = {}\n\n\nclass PermissionError(Exception):\n    pass",
+          "nodes": []
+        },
+        {
+          "title": "chunk_2",
+          "node_id": "permissions.py::chunk_2",
+          "summary": "class PermissionPolicy:",
+          "is_leaf": true,
+          "content": "class PermissionPolicy:\n    \"\"\"Checks whether a user is allowed to perform a given action.\"\"\"\n\n    def assign_role(self, user: User, role: Role) -> None:\n        _user_roles[user.id] = role.value\n\n    def get_role(self, user: User) -> str:\n        return _user_roles.get(user.id, Role.MEMBER.value)\n\n    def require(self, user: User, action: str) -> None:\n        \"\"\"Raise PermissionError if user's role does not allow action.\"\"\"\n        role = self.get_role(user)\n        allowed = ROLE_PERMISSIONS.get(role, set())\n        if action not in allowed:\n            raise PermissionError(\n                f\"User '{user.username}' with role '{role}' cannot perform '{action}'\"\n            )\n\n    def can(self, user: User, action: str) -> bool:\n        role = self.get_role(user)\n        return action in ROLE_PERMISSIONS.get(role, set())",
+          "nodes": []
+        }
+      ]
+    },
+    {
+      "title": "reports.py",
+      "node_id": "reports.py",
+      "summary": "Here's a 1-2 sentence summary of the Python file for a search index:\n\n`reports.py` is a Python module that generates aggregated statistics across users and tasks, including user reports and system reports, while enforcing permission checks via the `PermissionPolicy`. It uses a database to retrieve user and task data and provides methods to generate reports with various metrics such as task counts, completion rates, and priority distributions.",
+      "is_leaf": false,
+      "nodes": [
+        {
+          "title": "chunk_1",
+          "node_id": "reports.py::chunk_1",
+          "summary": "\"\"\"",
+          "is_leaf": true,
+          "content": "\"\"\"\nreports.py \u2014 Aggregated statistics across users and tasks.\nRequires report:view permission (checked via PermissionPolicy).\n\"\"\"\n\nfrom dataclasses import dataclass\nfrom models import Status, Priority\nfrom database import Database\nfrom permissions import PermissionPolicy\nfrom models import User\n\n\n@dataclass\nclass UserReport:\n    user_id: int\n    username: str\n    total_tasks: int\n    completed_tasks: int\n    overdue_tasks: int\n    tasks_by_priority: dict[str, int]\n\n\n@dataclass\nclass SystemReport:\n    total_users: int\n    total_tasks: int\n    completed_tasks: int\n    tasks_by_status: dict[str, int]\n    tasks_by_priority: dict[str, int]",
+          "nodes": []
+        },
+        {
+          "title": "chunk_2",
+          "node_id": "reports.py::chunk_2",
+          "summary": "class ReportService:",
+          "is_leaf": true,
+          "content": "class ReportService:\n    \"\"\"Generates reports. Enforces report:view permission before returning data.\"\"\"\n\n    def __init__(self, db: Database, policy: PermissionPolicy):\n        self.db = db\n        self.policy = policy\n\n    def user_report(self, requester: User, target_user_id: int) -> UserReport:\n        self.policy.require(requester, \"report:view\")\n        target = self.db.get_user(target_user_id)\n        if target is None:\n            raise ValueError(f\"User {target_user_id} not found\")\n        tasks = self.db.list_tasks(owner_id=target_user_id)\n        by_priority: dict[str, int] = {p.value: 0 for p in Priority}\n        for t in tasks:\n            by_priority[t.priority.value] += 1\n        return UserReport(\n            user_id=target.id,\n            username=target.username,\n            total_tasks=len(tasks),\n            completed_tasks=sum(1 for t in tasks if t.status == Status.DONE),\n            overdue_tasks=sum(1 for t in tasks if t.is_overdue()),\n            tasks_by_priority=by_priority,\n        )",
+          "nodes": []
+        },
+        {
+          "title": "chunk_3",
+          "node_id": "reports.py::chunk_3",
+          "summary": "def system_report(self, requester: User) -> SystemReport:",
+          "is_leaf": true,
+          "content": "def system_report(self, requester: User) -> SystemReport:\n        self.policy.require(requester, \"report:view\")\n        all_tasks = self.db.list_tasks()\n        all_users = self.db.list_users()\n        by_status: dict[str, int] = {s.value: 0 for s in Status}\n        by_priority: dict[str, int] = {p.value: 0 for p in Priority}\n        for t in all_tasks:\n            by_status[t.status.value] += 1\n            by_priority[t.priority.value] += 1\n        return SystemReport(\n            total_users=len(all_users),\n            total_tasks=len(all_tasks),\n            completed_tasks=by_status.get(Status.DONE.value, 0),\n            tasks_by_status=by_status,\n            tasks_by_priority=by_priority,\n        )",
+          "nodes": []
+        }
+      ]
+    },
+    {
+      "title": "scheduler.py",
+      "node_id": "scheduler.py",
+      "summary": "Here's a 1-2 sentence summary of the Python file `scheduler.py` for a search index:\n\n`scheduler.py` is a Python module that implements a recurring task scheduler, allowing tasks to be auto-created on a cron-like schedule (daily/weekly) while respecting billing limits and logging audit events. It uses a data-driven approach to manage scheduled tasks and materialize them into real task records at regular intervals.",
+      "is_leaf": false,
+      "nodes": [
+        {
+          "title": "chunk_1",
+          "node_id": "scheduler.py::chunk_1",
+          "summary": "\"\"\"",
+          "is_leaf": true,
+          "content": "\"\"\"\nscheduler.py \u2014 Recurring task scheduler.\nAllows tasks to be auto-created on a cron-like schedule (daily/weekly).\n\"\"\"\n\nfrom dataclasses import dataclass, field\nfrom datetime import datetime, timedelta\nfrom enum import Enum\nfrom typing import Optional\nfrom models import Priority, Task, User\nfrom database import Database\nfrom billing import BillingService\nfrom audit_log import AuditLogger, AuditEventType\n\n\nclass RecurrenceInterval(Enum):\n    DAILY = \"daily\"\n    WEEKLY = \"weekly\"\n    MONTHLY = \"monthly\"\n\n\n@dataclass\nclass ScheduledTask:\n    id: int\n    owner_id: int\n    title: str\n    description: str\n    priority: Priority\n    interval: RecurrenceInterval\n    next_run: datetime\n    tags: list[str] = field(default_factory=list)\n    is_active: bool = True",
+          "nodes": []
+        },
+        {
+          "title": "chunk_2",
+          "node_id": "scheduler.py::chunk_2",
+          "summary": "class TaskScheduler:",
+          "is_leaf": true,
+          "content": "class TaskScheduler:\n    \"\"\"\n    Manages recurring task templates.\n    On each tick(), due schedules are materialized into real Task records.\n    Respects billing limits \u2014 skips creation and logs if plan_tier cap is hit.\n    \"\"\"\n\n    def __init__(self, db: Database, billing: BillingService, audit: AuditLogger):\n        self.db = db\n        self.billing = billing\n        self.audit = audit\n        self._schedules: dict[int, ScheduledTask] = {}\n        self._next_id = 1\n\n    def add_schedule(\n        self,\n        owner: User,\n        title: str,\n        description: str,\n        priority: Priority,\n        interval: RecurrenceInterval,\n        first_run: Optional[datetime] = None,\n        tags: list[str] = None,\n    ) -> ScheduledTask:\n        schedule = ScheduledTask(\n            id=self._next_id,\n            owner_id=owner.id,\n            title=title,\n            description=description,\n            priority=priority,\n            interval=interval,\n            next_run=first_run or datetime.utcnow(),\n            tags=tags or [],\n        )\n        self._schedules[schedule.id] = schedule\n        self._next_id += 1\n        return schedule\n\n    def cancel_schedule(self, schedule_id: int) -> None:\n        if schedule_id in self._schedules:\n            self._schedules[schedule_id].is_active = False",
+          "nodes": []
+        },
+        {
+          "title": "chunk_3",
+          "node_id": "scheduler.py::chunk_3",
+          "summary": "def tick(self, now: Optional[datetime] = None) -> list[Task]:",
+          "is_leaf": true,
+          "content": "def tick(self, now: Optional[datetime] = None) -> list[Task]:\n        \"\"\"Materialize all due schedules into Task records. Call periodically.\"\"\"\n        now = now or datetime.utcnow()\n        created: list[Task] = []\n\n        for schedule in self._schedules.values():\n            if not schedule.is_active or schedule.next_run > now:\n                continue\n\n            owner = self.db.get_user(schedule.owner_id)\n            if owner is None or not owner.is_active:\n                continue\n\n            try:\n                self.billing.check_task_limit(owner)\n            except Exception:\n                self.audit.record(\n                    AuditEventType.PERMISSION_DENIED,\n                    actor_id=owner.id,\n                    detail=f\"Scheduled task skipped \u2014 plan_tier limit reached for schedule {schedule.id}\",\n                )\n                continue\n\n            task = self.db.create_task(\n                title=schedule.title,\n                description=schedule.description,\n                owner_id=schedule.owner_id,\n                priority=schedule.priority,\n                tags=schedule.tags,\n            )\n            self.audit.record(\n                AuditEventType.TASK_CREATED,\n                actor_id=owner.id,\n                target_id=task.id,\n                detail=f\"Created by scheduler schedule_id={schedule.id}\",\n            )\n            created.append(task)\n            schedule.next_run = self._advance(schedule.next_run, schedule.interval)",
+          "nodes": []
+        },
+        {
+          "title": "chunk_4",
+          "node_id": "scheduler.py::chunk_4",
+          "summary": "return created",
+          "is_leaf": true,
+          "content": "return created\n\n    @staticmethod\n    def _advance(dt: datetime, interval: RecurrenceInterval) -> datetime:\n        if interval == RecurrenceInterval.DAILY:\n            return dt + timedelta(days=1)\n        if interval == RecurrenceInterval.WEEKLY:\n            return dt + timedelta(weeks=1)\n        # monthly \u2014 approximate with 30 days\n        return dt + timedelta(days=30)",
+          "nodes": []
+        }
+      ]
+    },
+    {
+      "title": "task_service.py",
+      "node_id": "task_service.py",
+      "summary": "Here's a 1-2 sentence summary of the Python file `task_service.py` for a search index:\n\n`task_service.py` is a business logic layer that handles task operations, enforcing ownership rules, permission policies, billing limits, and audit logging, and dispatching notifications on state changes. It provides methods for creating, completing, listing, and deleting tasks, all while ensuring the integrity and security of the task data.",
+      "is_leaf": false,
+      "nodes": [
+        {
+          "title": "chunk_1",
+          "node_id": "task_service.py::chunk_1",
+          "summary": "\"\"\"",
+          "is_leaf": true,
+          "content": "\"\"\"\ntask_service.py \u2014 Business logic layer for task operations.\nSits between the API/CLI layer and the database.\nEnforces ownership rules, permission policy, billing limits, audit logging,\nand dispatches notifications on every state change.\n\"\"\"\n\nfrom database import Database\nfrom models import Task, Priority, Status\nfrom auth import AuthService, AuthError\nfrom permissions import PermissionPolicy\nfrom billing import BillingService\nfrom audit_log import AuditLogger, AuditEventType\nfrom notifications import NotificationService",
+          "nodes": []
+        },
+        {
+          "title": "chunk_2",
+          "node_id": "task_service.py::chunk_2",
+          "summary": "class TaskService:",
+          "is_leaf": true,
+          "content": "class TaskService:\n    \"\"\"All task operations go through here so no check is ever skipped.\"\"\"\n\n    def __init__(\n        self,\n        db: Database,\n        auth: AuthService,\n        policy: PermissionPolicy,\n        billing: BillingService,\n        audit: AuditLogger,\n        notifications: NotificationService,\n    ):\n        self.db = db\n        self.auth = auth\n        self.policy = policy\n        self.billing = billing\n        self.audit = audit\n        self.notifications = notifications\n\n    def create_task(\n        self,\n        token: str,\n        title: str,\n        description: str,\n        priority: Priority = Priority.MEDIUM,\n        tags: list[str] = None,\n    ) -> Task:\n        \"\"\"Create a task owned by the currently logged-in user.\"\"\"\n        user = self.auth.get_current_user(token)\n        self.policy.require(user, \"task:create\")\n        self.billing.check_task_limit(user)\n        task = self.db.create_task(\n            title=title,\n            description=description,\n            owner_id=user.id,\n            priority=priority,\n            tags=tags or [],\n        )\n        self.audit.record(\n            AuditEventType.TASK_CREATED,\n            actor_id=user.id,\n            target_id=task.id,\n            detail=f\"title='{title}' priority='{priority.value}'\",\n        )\n        self.notifications.on_task_created(task, user)\n        return task",
+          "nodes": []
+        },
+        {
+          "title": "chunk_3",
+          "node_id": "task_service.py::chunk_3",
+          "summary": "def complete_task(self, token: str, task_id: int) -> Task:",
+          "is_leaf": true,
+          "content": "def complete_task(self, token: str, task_id: int) -> Task:\n        \"\"\"Mark a task as done. Only the owner can do this.\"\"\"\n        user = self.auth.get_current_user(token)\n        self.policy.require(user, \"task:complete\")\n        task = self.db.get_task(task_id)\n        if task is None:\n            raise ValueError(f\"Task {task_id} not found\")\n        if task.owner_id != user.id:\n            raise AuthError(\"You can only complete your own tasks\")\n        updated = self.db.update_task_status(task_id, Status.DONE)\n        self.audit.record(\n            AuditEventType.TASK_COMPLETED,\n            actor_id=user.id,\n            target_id=task_id,\n            detail=f\"task_id={task_id}\",\n        )\n        self.notifications.on_task_completed(updated, user)\n        return updated\n\n    def list_my_tasks(self, token: str) -> list[Task]:\n        \"\"\"Return all tasks belonging to the current user.\"\"\"\n        user = self.auth.get_current_user(token)\n        self.policy.require(user, \"task:view\")\n        return self.db.list_tasks(owner_id=user.id)",
+          "nodes": []
+        },
+        {
+          "title": "chunk_4",
+          "node_id": "task_service.py::chunk_4",
+          "summary": "def delete_task(self, token: str, task_id: int) -> bool:",
+          "is_leaf": true,
+          "content": "def delete_task(self, token: str, task_id: int) -> bool:\n        \"\"\"Delete a task. Only the owner can delete it.\"\"\"\n        user = self.auth.get_current_user(token)\n        self.policy.require(user, \"task:delete\")\n        task = self.db.get_task(task_id)\n        if task is None:\n            raise ValueError(f\"Task {task_id} not found\")\n        if task.owner_id != user.id:\n            raise AuthError(\"You can only delete your own tasks\")\n        deleted = self.db.delete_task(task_id)\n        if deleted:\n            self.audit.record(\n                AuditEventType.TASK_DELETED,\n                actor_id=user.id,\n                target_id=task_id,\n                detail=f\"task_id={task_id}\",\n            )\n            self.notifications.on_task_deleted(task, user)\n        return deleted",
+          "nodes": []
+        },
+        {
+          "title": "chunk_5",
+          "node_id": "task_service.py::chunk_5",
+          "summary": "def assign_task(self, token: str, task_id: int, assignee_id: int) -> Task:",
+          "is_leaf": true,
+          "content": "def assign_task(self, token: str, task_id: int, assignee_id: int) -> Task:\n        \"\"\"\n        Reassign a task to another user.\n        Requires task:assign permission (admin only).\n        Updates owner_id so the new owner passes future ownership checks.\n        \"\"\"\n        user = self.auth.get_current_user(token)\n        self.policy.require(user, \"task:assign\")\n        task = self.db.get_task(task_id)\n        if task is None:\n            raise ValueError(f\"Task {task_id} not found\")\n        assignee = self.db.get_user(assignee_id)\n        if assignee is None:\n            raise ValueError(f\"Assignee {assignee_id} not found\")\n        task.owner_id = assignee_id\n        self.audit.record(\n            AuditEventType.TASK_ASSIGNED,\n            actor_id=user.id,\n            target_id=task_id,\n            detail=f\"assigned to user_id={assignee_id}\",\n        )\n        self.notifications.on_task_assigned(task, assignee, user)\n        return task\n\n    def search_tasks(self, token: str, keyword: str) -> list[Task]:\n        \"\"\"Search user's tasks by keyword in title or description.\"\"\"\n        user = self.auth.get_current_user(token)\n        self.policy.require(user, \"task:view\")\n        all_matches = self.db.search_tasks(keyword)\n        return [t for t in all_matches if t.owner_id == user.id]",
+          "nodes": []
+        }
+      ]
+    }
+  ]
+}
