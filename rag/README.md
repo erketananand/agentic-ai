@@ -1,17 +1,19 @@
 # RAG System Suite
 
-Comprehensive Retrieval-Augmented Generation implementations for code analysis with four distinct approaches, plus a hybrid system combining all three retrieval strategies.
+Comprehensive Retrieval-Augmented Generation implementations for code analysis with multiple approaches organized by retrieval strategy, plus hybrid systems combining different strategies.
 
 ## Quick Navigation
 
 | System | File | Focus | Best For |
 |--------|------|-------|----------|
-| **Semantic RAG** | `1_semantic_rag/2_ast_semantic_rag.py` | Vector embeddings | Conceptual understanding, design patterns |
-| **Lexical RAG** | `2_lexical_rag/2_lexical_rag_using_bm25_ast.py` | Keyword matching | Exact code locations, API lookups |
-| **Hybrid (2-way)** | `4_hybrid_rag/1_hybrid_rag_with_semantic_lexical.py` | Semantic + Lexical | Balanced keyword + concept matching |
-| **Graph RAG (LLM)** | `3_graph_rag/1_graph_rag_using_llm_graph_builder.py` | LLM-extracted graph | Rich relationships, high accuracy |
-| **Graph RAG (Chunking)** | `3_graph_rag/2_graph_rag_using_chucking_graph_builder.py` | Deterministic graph | Fast graph building, zero LLM indexing |
-| **Hybrid (3-way)** | `4_hybrid_rag/2_hybrid_rag_with_semantic_lexical_graph.py` | All three combined | Comprehensive analysis ★ RECOMMENDED |
+| **Semantic RAG (Recursive)** | `1_semantic_rag/1_semantic_rag_using_recursive_text_splitter.py` | Vector embeddings + recursive chunking | Flexible, adaptive concept understanding |
+| **Semantic RAG (AST)** | `1_semantic_rag/2_semantic_rag_using_ast.py` | Vector embeddings + AST chunking | Coherent code units, design patterns |
+| **Lexical RAG (Recursive)** | `2_lexical_rag/1_lexical_rag_using_bm25_recursive_text_splitter.py` | BM25 keyword matching + recursive chunking | Fast, exact code locations |
+| **Lexical RAG (AST)** | `2_lexical_rag/2_lexical_rag_using_bm25_ast.py` | BM25 keyword matching + AST chunking | Fast structured searches |
+| **Graph RAG (Chunking)** | `3_graph_rag/1_graph_rag_using_chucking_graph_builder.py` | Deterministic graph from code structure | Fast, zero LLM indexing |
+| **Graph RAG (LLM)** | `3_graph_rag/2_graph_rag_using_llm_graph_builder.py` | LLM-extracted knowledge graph | Rich relationships, high accuracy |
+| **Hybrid (2-way)** | `4_hybrid_rag/1_hybrid_rag_with_semantic_lexical.py` | Semantic + Lexical combined | Balanced keyword + concept matching |
+| **Hybrid (3-way)** | `4_hybrid_rag/2_hybrid_rag_with_semantic_lexical_graph.py` | All three strategies combined | Comprehensive analysis ★ RECOMMENDED |
 
 ## Quick Start
 
@@ -55,81 +57,99 @@ agentic-ai/
 │   ├── chunking.py             # Code splitting strategies
 │   ├── vector_store.py         # Embedding-based storage
 │   └── retrievers.py           # BM25 retriever implementation
-├── rag/                        # RAG implementations
-│   ├── 1_semantic_rag.py          # Embedding-based semantic search
-│   ├── 2_ast_semantic_rag.py       # AST-based semantic search
-│   ├── 3_lexical_rag_using_bm25.py # Keyword-based lexical search
+├── rag/                        # RAG implementations organized by strategy
+│   ├── 1_semantic_rag/
+│   │   ├── 1_semantic_rag_using_recursive_text_splitter.py
+│   │   ├── 2_semantic_rag_using_ast.py
+│   │   └── README.md
+│   ├── 2_lexical_rag/
+│   │   ├── 1_lexical_rag_using_bm25_recursive_text_splitter.py
+│   │   ├── 2_lexical_rag_using_bm25_ast.py
+│   │   └── README.md
+│   ├── 3_graph_rag/
+│   │   ├── 1_graph_rag_using_chucking_graph_builder.py
+│   │   ├── 2_graph_rag_using_llm_graph_builder.py
+│   │   ├── chunking_graph_cache.graphml
+│   │   ├── llm_graph_cache.graphml
+│   │   └── README.md
+│   ├── 4_hybrid_rag/
+│   │   ├── 1_hybrid_rag_with_semantic_lexical.py
+│   │   ├── 2_hybrid_rag_with_semantic_lexical_graph.py
+│   │   ├── hybrid_graph_cache.graphml
+│   │   └── README.md
+│   ├── QUESTIONS.md            # Example queries and use cases
+│   ├── requirements.txt         # Python dependencies
+│   ├── .env                     # Environment variables (not in repo)
 │   └── README.md               # This file
 ├── sample_project/             # Sample codebase for testing
-└── requirements.txt            # Python dependencies
+└── requirements.txt            # Root-level Python dependencies
 ```
 
 ## RAG Implementations
 
-### 1. Semantic RAG (`1_semantic_rag.py`)
-**Strategy:** Embedding-based semantic search
+### 1. Semantic RAG
+
+#### 1.1. Using Recursive Text Splitter (`1_semantic_rag_using_recursive_text_splitter.py`)
+**Strategy:** Embedding-based semantic search with recursive chunking
 
 **How it works:**
-- Loads Python files and chunks them using recursive character-based splitting
+- Loads Python files and chunks using recursive character-based splitting
 - Converts chunks to embeddings using HuggingFace (all-MiniLM-L6-v2)
 - Stores embeddings in Chroma vector database
 - Retrieves semantically similar chunks based on query embeddings
 
 **Pros:**
 - Understands semantic meaning (not just keywords)
+- Flexible chunk boundaries adapt to content
 - Works well for conceptual queries
-- Flexible chunk boundaries
 
 **Cons:**
-- Slower (needs embedding computation)
-- Requires GPU for faster inference
+- Slower (embedding computation required)
+- GPU optional but recommended
 - May miss exact keyword matches
-
-**Configuration:**
-```python
-CHUNK_SIZE = 1200  # Adjust based on code complexity
-```
 
 ---
 
-### 2. AST Semantic RAG (`2_ast_semantic_rag.py`)
+#### 1.2. Using AST (`2_semantic_rag_using_ast.py`)
 **Strategy:** AST-based semantic chunking with embeddings
 
 **How it works:**
-- Loads Python files and parses them using Abstract Syntax Tree (AST)
+- Loads Python files and parses using Abstract Syntax Tree (AST)
 - Extracts complete classes and module-level functions as chunks
 - Converts chunks to embeddings
 - Retrieves relevant code units based on semantics
 
 **Pros:**
 - Creates semantically coherent chunks (complete functions/classes)
-- Preserves code structure
-- Better for understanding related code
+- Preserves code structure integrity
+- Better for understanding related code units
 
 **Cons:**
-- Slower (AST parsing + embedding)
+- Slower (AST parsing + embedding computation)
 - Only works with valid Python syntax
-- May create very large chunks for big classes
+- May create very large chunks for complex classes
 
 **Use case:**
 ```bash
-python 2_ast_semantic_rag.py --repo /path/to/codebase
+python 1_semantic_rag/2_semantic_rag_using_ast.py --repo /path/to/codebase
 ```
 
 ---
 
-### 3. Lexical RAG using BM25 (`3_lexical_rag_using_bm25.py`)
-**Strategy:** Keyword-based lexical search (no embeddings)
+### 2. Lexical RAG (BM25)
+
+#### 2.1. Using Recursive Text Splitter (`1_lexical_rag_using_bm25_recursive_text_splitter.py`)
+**Strategy:** Keyword-based lexical search with recursive chunking
 
 **How it works:**
-- Loads Python files and chunks them using recursive character-based splitting
+- Loads Python files and chunks using recursive character-based splitting
 - Uses BM25 algorithm (Okapi variant) for keyword matching
 - No embeddings—pure term frequency ranking
 - Retrieves chunks with highest keyword overlap
 
 **Pros:**
-- Fastest (no embeddings needed)
-- Works on CPU
+- Fastest retrieval (no embeddings needed)
+- Works on CPU only
 - Exact keyword matching
 - Great for code with consistent terminology
 
@@ -138,10 +158,103 @@ python 2_ast_semantic_rag.py --repo /path/to/codebase
 - Misses related concepts
 - May struggle with synonyms
 
-**Configuration:**
-```python
-CHUNK_SIZE = 1200  # Adjust for retrieval granularity
-```
+---
+
+#### 2.2. Using AST (`2_lexical_rag_using_bm25_ast.py`)
+**Strategy:** Keyword-based lexical search with AST chunking
+
+**How it works:**
+- Parses Python files using Abstract Syntax Tree (AST)
+- Extracts complete functions and classes as chunks
+- Applies BM25 ranking to structured code chunks
+- Retrieves relevant code units by keyword matching
+
+**Pros:**
+- Fast keyword retrieval on structured chunks
+- No embeddings needed
+- Better chunk coherence than recursive splitting
+
+**Cons:**
+- Limited to valid Python syntax
+- Semantic meaning not understood
+- May struggle with cross-cutting concerns
+
+---
+
+### 3. Graph RAG
+
+#### 3.1. Using Chunking-based Graph Builder (`1_graph_rag_using_chucking_graph_builder.py`)
+**Strategy:** Deterministic graph from code structure
+
+**How it works:**
+- Builds knowledge graph directly from code structure (AST)
+- No LLM calls—deterministic extraction
+- Extracts functions, classes, and their relationships
+- Traverses graph to find related code units
+
+**Pros:**
+- Fastest graph building
+- Zero LLM indexing costs
+- Fully deterministic and reproducible
+- Works offline
+
+**Cons:**
+- May miss implicit relationships
+- Limited to syntactic relationships
+- Graph quality depends on code structure
+
+---
+
+#### 3.2. Using LLM Graph Builder (`2_graph_rag_using_llm_graph_builder.py`)
+**Strategy:** LLM-extracted knowledge graph
+
+**How it works:**
+- Uses LLM to extract semantic relationships from code
+- Builds rich knowledge graph with implicit relationships
+- LLM understands context beyond syntax
+- Traverses graph to find semantically related code
+
+**Pros:**
+- Rich relationship extraction
+- Understands implicit dependencies
+- High accuracy for complex relationships
+
+**Cons:**
+- Slower (LLM calls for indexing)
+- Requires LLM API access
+- Higher costs
+
+---
+
+### 4. Hybrid RAG
+
+#### 4.1. Semantic + Lexical (`1_hybrid_rag_with_semantic_lexical.py`)
+**Strategy:** Combines vector embeddings and BM25 keyword search
+
+**How it works:**
+- Uses both semantic embeddings and BM25 ranking
+- Combines results using ensemble ranking (Reciprocal Rank Fusion)
+- Retrieves chunks that match both semantically and lexically
+
+**Pros:**
+- Balanced approach combining both strategies
+- Better coverage (semantic + keyword)
+- Handles both conceptual and exact matches
+
+---
+
+#### 4.2. Semantic + Lexical + Graph (`2_hybrid_rag_with_semantic_lexical_graph.py`)
+**Strategy:** All three strategies combined ★ RECOMMENDED
+
+**How it works:**
+- Combines semantic embeddings, BM25 ranking, and graph traversal
+- Retrieves from all three indexes
+- Merges and re-ranks results using ensemble methods
+
+**Pros:**
+- Most comprehensive analysis
+- Covers conceptual, lexical, and relational queries
+- Best coverage for complex questions
 
 ---
 
@@ -195,45 +308,75 @@ retriever = BM25Retriever(docs=chunks, bm25=bm25_obj)
 
 ## Usage
 
-### Run Semantic RAG
+### Run Recommended Hybrid System (3-way)
 ```bash
-python 1_semantic_rag.py --repo ./sample_project
+python 4_hybrid_rag/2_hybrid_rag_with_semantic_lexical_graph.py --repo ./sample_project
 ```
 
-### Run AST Semantic RAG
+### Run Semantic RAG
 ```bash
-python 2_ast_semantic_rag.py --repo ./sample_project
+# With recursive text splitting
+python 1_semantic_rag/1_semantic_rag_using_recursive_text_splitter.py --repo ./sample_project
+
+# With AST-based chunking
+python 1_semantic_rag/2_semantic_rag_using_ast.py --repo ./sample_project
 ```
 
 ### Run Lexical RAG (BM25)
 ```bash
-python 3_lexical_rag_using_bm25.py --repo ./sample_project
+# With recursive text splitting
+python 2_lexical_rag/1_lexical_rag_using_bm25_recursive_text_splitter.py --repo ./sample_project
+
+# With AST-based chunking
+python 2_lexical_rag/2_lexical_rag_using_bm25_ast.py --repo ./sample_project
+```
+
+### Run Graph RAG
+```bash
+# With chunking-based graph builder (fast, no LLM)
+python 3_graph_rag/1_graph_rag_using_chucking_graph_builder.py --repo ./sample_project
+
+# With LLM-based graph builder (richer, slower)
+python 3_graph_rag/2_graph_rag_using_llm_graph_builder.py --repo ./sample_project
+```
+
+### Run Hybrid RAG
+```bash
+# Semantic + Lexical
+python 4_hybrid_rag/1_hybrid_rag_with_semantic_lexical.py --repo ./sample_project
+
+# Semantic + Lexical + Graph (recommended)
+python 4_hybrid_rag/2_hybrid_rag_with_semantic_lexical_graph.py --repo ./sample_project
 ```
 
 ### Interactive Session
-All three systems start an interactive Q&A session:
+All systems start an interactive Q&A session:
 ```
 Ready. Ask your question. Type 'exit' to quit
 
-You: How does authentication work?
-Agent: [searches codebase and responds]
+You: How does authentication work and what depends on it?
+Agent: [searches codebase with appropriate strategy and responds]
+
+You: Where is the user validation function?
+Agent: [lexical search finds exact location]
 
 You: exit
 ```
 
 ---
 
-## Comparison
+## Strategy Comparison
 
-| Feature | Semantic | AST Semantic | BM25 |
-|---------|----------|--------------|------|
-| Speed | Medium | Slow | **Fast** |
-| Accuracy | High | **Highest** | Medium |
-| GPU Required | Optional | Optional | No |
-| Semantic Understanding | Yes | Yes | No |
-| Chunk Coherence | Medium | **High** | Medium |
-| Works Offline | Yes | Yes | Yes |
-| Memory Usage | High | Medium | Low |
+| Feature | Semantic Recursive | Semantic AST | BM25 Recursive | BM25 AST | Graph Chunking | Graph LLM | Hybrid 2-way | Hybrid 3-way |
+|---------|----------|----------|---------|---------|---------|---------|---------|---------|
+| Speed | Medium | Slow | **Fast** | **Fast** | Medium | Slow | Medium | Medium |
+| Accuracy | High | **Highest** | Medium | Medium | High | **Highest** | Very High | **★ Best** |
+| GPU Required | Optional | Optional | No | No | No | No | Optional | Optional |
+| Semantic Understanding | Yes | Yes | No | No | Partial | Yes | Yes | **Yes** |
+| Chunk Coherence | Medium | **High** | Medium | **High** | N/A | N/A | High | **High** |
+| Works Offline | Yes | Yes | Yes | Yes | Yes | No | Yes | Partial |
+| Memory Usage | High | Medium | Low | Low | Medium | High | High | Very High |
+| Best For | Concepts | Code structure | Keywords | Keywords | Dependencies | Complex relations | Balanced | Everything ★ |
 
 ---
 
@@ -255,10 +398,14 @@ embedding_model = "sentence-transformers/all-MiniLM-L6-v2"    # Lighter
 In RAG files, change the model:
 ```python
 # From Groq
-llm = ChatGroq(model="mixtral-8x7b-32768", temperature=0)
+from langchain_groq import ChatGroq
+llm = ChatGroq(model="llama-3.1-70b-versatile", temperature=0)
+llm = ChatGroq(model="llama3-8b-8192", temperature=0)
+llm = ChatGroq(model="llama3-70b-8192", temperature=0)
 
 # Or use OpenAI
 from langchain_openai import ChatOpenAI
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 llm = ChatOpenAI(model="gpt-4", temperature=0)
 ```
 
@@ -292,11 +439,31 @@ HUGGINGFACE_TOKEN=your_huggingface_token  # Optional
 
 ---
 
+## Quick Start Guide
+
+**For the best overall experience:** Start with the recommended 3-way hybrid system:
+```bash
+python 4_hybrid_rag/2_hybrid_rag_with_semantic_lexical_graph.py --repo ./sample_project
+```
+
+**Choose based on your priority:**
+
+| Priority | System | Why |
+|----------|--------|-----|
+| **Speed** | BM25 (either version) | No embeddings needed, instant results |
+| **Accuracy** | Hybrid 3-way | Best coverage of all retrieval strategies |
+| **Code Understanding** | Semantic AST | Complete functions/classes preserved |
+| **Exact Matches** | BM25 AST | Fast, structured keyword search |
+| **Dependency Mapping** | Graph (chunking) | Fast relationship extraction |
+| **Complex Relations** | Graph (LLM) | Semantic relationship understanding |
+
 ## Tips
 
-1. **Start with BM25** if speed is critical or running on CPU
-2. **Use AST Semantic** for best code understanding
-3. **Use Semantic** for more flexible, forgiving searches
-4. **Adjust k in retriever_tool** to change number of results (default: 4)
-5. **Experiment with chunk sizes** based on your codebase
-6. **Use persistent vector stores** for large codebases to avoid re-computing
+1. **Start with 3-way Hybrid** for best overall results
+2. **Use BM25** if speed is critical or running on CPU-only systems
+3. **Use Semantic AST** for deep code understanding with structured chunks
+4. **Use Graph RAG** when dependency/relationship questions are important
+5. **Adjust k in retriever** to change number of results (default: 4)
+6. **Experiment with chunk sizes** in code based on your codebase complexity
+7. **Use persistent vector stores** for large codebases to avoid re-indexing
+8. **Enable caching** in Graph RAG for faster subsequent queries (graphml files)
