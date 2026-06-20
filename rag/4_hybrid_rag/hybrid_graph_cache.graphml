@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d1" for="node" attr.name="source" attr.type="string" />
+  <key id="d0" for="node" attr.name="type" attr.type="string" />
+  <graph edgedefault="directed">
+    <node id="AuditEventType">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\audit_log.py</data>
+    </node>
+    <node id="AuditEntry">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\audit_log.py</data>
+    </node>
+    <node id="AuditLogger">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\audit_log.py</data>
+    </node>
+    <node id="AuthError">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\auth.py</data>
+    </node>
+    <node id="AuthService">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\auth.py</data>
+    </node>
+    <node id="PlanTier">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\billing.py</data>
+    </node>
+    <node id="BillingError">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\billing.py</data>
+    </node>
+    <node id="BillingService">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\billing.py</data>
+    </node>
+    <node id="Database">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\database.py</data>
+    </node>
+    <node id="main">
+      <data key="d0">function</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\main.py</data>
+    </node>
+    <node id="Priority">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\models.py</data>
+    </node>
+    <node id="Status">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\models.py</data>
+    </node>
+    <node id="User">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\models.py</data>
+    </node>
+    <node id="Task">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\models.py</data>
+    </node>
+    <node id="NotificationService">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\notifications.py</data>
+    </node>
+    <node id="Role">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\permissions.py</data>
+    </node>
+    <node id="PermissionError">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\permissions.py</data>
+    </node>
+    <node id="PermissionPolicy">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\permissions.py</data>
+    </node>
+    <node id="UserReport">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\reports.py</data>
+    </node>
+    <node id="SystemReport">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\reports.py</data>
+    </node>
+    <node id="ReportService">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\reports.py</data>
+    </node>
+    <node id="RecurrenceInterval">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\scheduler.py</data>
+    </node>
+    <node id="ScheduledTask">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\scheduler.py</data>
+    </node>
+    <node id="TaskScheduler">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\scheduler.py</data>
+    </node>
+    <node id="TaskService">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\task_service.py</data>
+    </node>
+    <node id="EmailMessage">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\integrations\email_client.py</data>
+    </node>
+    <node id="EmailClient">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\integrations\email_client.py</data>
+    </node>
+    <node id="SlackWebhook">
+      <data key="d0">class</data>
+      <data key="d1">C:\Users\kanand\Documents\ketan\agentic-ai\sample_project\integrations\slack_webhook.py</data>
+    </node>
+  </graph>
+</graphml>
