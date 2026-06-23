@@ -1,0 +1,207 @@
+{
+  "What is AuthService responsible for?": {
+    "answer": "I could not find that in the codebase.",
+    "contexts": [
+      "class AuthService:\n    \"\"\"Handles login and basic access control.\"\"\"\n\nalice_token = auth.login(\"alice@example.com\", \"pass123\")\n    bob_token = auth.login(\"bob@example.com\", \"pass456\")\n    admin_token = auth.login(\"admin@taskapp.dev\", \"adminpass\")\n\n# --- seed users ---\n    alice = auth.register(\"alice\", \"alice@example.com\", \"pass123\")\n    bob = auth.register(\"bob\", \"bob@example.com\", \"pass456\")\n    admin = auth.register(\"admin\", \"admin@taskapp.dev\", \"adminpass\")\n\npolicy.assign_role(admin, Role.ADMIN)\n    policy.assign_role(alice, Role.MEMBER)\n    policy.assign_role(bob, Role.MEMBER)\n\n    billing.assign_plan(alice, PlanTier.PRO)\n    billing.assign_plan(bob, PlanTier.FREE)"
+    ]
+  },
+  "What protects against privilege escalation in this codebase?": {
+    "answer": "The codebase protects against privilege escalation through a combination of access control and authorization mechanisms.\n\nThe `policy` module is used to assign roles to users, and the `billing` module is used to assign plans to users. These roles and plans determine the permissions and access levels of each user.\n\nThe `auth` module handles login and basic access control, and the `tasks` module creates tasks that can be assigned to users based on their roles and permissions.\n\nThe `PermissionError` exception is raised when a user attempts to perform an action that they do not have permission to perform, based on their role and the action they are trying to perform.\n\nTherefore, the codebase has a robust access control and authorization system in place to prevent privilege escalation.",
+    "contexts": [
+      "raise PermissionError(\n                f\"User '{user.username}' with role '{role}' cannot perform '{action}'\"\n            )\n\npolicy.assign_role(admin, Role.ADMIN)\n    policy.assign_role(alice, Role.MEMBER)\n    policy.assign_role(bob, Role.MEMBER)\n\n    billing.assign_plan(alice, PlanTier.PRO)\n    billing.assign_plan(bob, PlanTier.FREE)\n\nLOGIN_SUCCESS = \"login_success\"\n    LOGIN_FAILURE = \"login_failure\"\n    PERMISSION_DENIED = \"permission_denied\"\n\nclass PermissionError(Exception):\n    pass",
+      "class AuthService:\n    \"\"\"Handles login and basic access control.\"\"\"\n\n# ------------------------------------------------------------------\n    # Users\n    # ------------------------------------------------------------------\n\nalice_token = auth.login(\"alice@example.com\", \"pass123\")\n    bob_token = auth.login(\"bob@example.com\", \"pass456\")\n    admin_token = auth.login(\"admin@taskapp.dev\", \"adminpass\")\n\n# --- seed users ---\n    alice = auth.register(\"alice\", \"alice@example.com\", \"pass123\")\n    bob = auth.register(\"bob\", \"bob@example.com\", \"pass456\")\n    admin = auth.register(\"admin\", \"admin@taskapp.dev\", \"adminpass\")",
+      "alice_token = auth.login(\"alice@example.com\", \"pass123\")\n    bob_token = auth.login(\"bob@example.com\", \"pass456\")\n    admin_token = auth.login(\"admin@taskapp.dev\", \"adminpass\")\n\n# --- seed tasks ---\n    tasks.create_task(alice_token, \"Set up CI pipeline\", \"Configure GitHub Actions for the repo\", Priority.HIGH, tags=[\"devops\"])\n\nraise PermissionError(\n                f\"User '{user.username}' with role '{role}' cannot perform '{action}'\"\n            )\n\n# --- seed users ---\n    alice = auth.register(\"alice\", \"alice@example.com\", \"pass123\")\n    bob = auth.register(\"bob\", \"bob@example.com\", \"pass456\")\n    admin = auth.register(\"admin\", \"admin@taskapp.dev\", \"adminpass\")"
+    ]
+  },
+  "What happens if a user provides an incorrect password during login?": {
+    "answer": "If a user provides an incorrect password during login, the `AuthError` exception will be raised with the message \"Invalid password\". This is handled in the `login` method of the `auth` module, specifically in the line `if stored != password: raise AuthError(\"Invalid password\")`.",
+    "contexts": [
+      "LOGIN_SUCCESS = \"login_success\"\n    LOGIN_FAILURE = \"login_failure\"\n    PERMISSION_DENIED = \"permission_denied\"\n\nself._passwords[user.id] = password\n        return user\n\nif not user:\n            raise AuthError(\"User not found\")\n        stored = getattr(self, \"_passwords\", {}).get(user.id)\n        if stored != password:\n            raise AuthError(\"Invalid password\")\n        token = f\"token-{user.id}\"\n\nraise AuthError(f\"Email already registered: {email}\")\n        user = self.db.create_user(username, email)\n        # Store password against user id (plaintext \u2014 demo only!)\n        self._passwords = getattr(self, \"_passwords\", {})",
+      "LOGIN_SUCCESS = \"login_success\"\n    LOGIN_FAILURE = \"login_failure\"\n    PERMISSION_DENIED = \"permission_denied\"\n\nself._passwords[user.id] = password\n        return user\n\nif not user:\n            raise AuthError(\"User not found\")\n        stored = getattr(self, \"_passwords\", {}).get(user.id)\n        if stored != password:\n            raise AuthError(\"Invalid password\")\n        token = f\"token-{user.id}\"\n\nraise AuthError(f\"Email already registered: {email}\")\n        user = self.db.create_user(username, email)\n        # Store password against user id (plaintext \u2014 demo only!)\n        self._passwords = getattr(self, \"_passwords\", {})",
+      "LOGIN_SUCCESS = \"login_success\"\n    LOGIN_FAILURE = \"login_failure\"\n    PERMISSION_DENIED = \"permission_denied\"\n\nif not user:\n            raise AuthError(\"User not found\")\n        stored = getattr(self, \"_passwords\", {}).get(user.id)\n        if stored != password:\n            raise AuthError(\"Invalid password\")\n        token = f\"token-{user.id}\"\n\nalice_token = auth.login(\"alice@example.com\", \"pass123\")\n    bob_token = auth.login(\"bob@example.com\", \"pass456\")\n    admin_token = auth.login(\"admin@taskapp.dev\", \"adminpass\")\n\nself._passwords[user.id] = password\n        return user"
+    ]
+  },
+  "How does the system prevent a user from creating unlimited tasks?": {
+    "answer": "The system prevents a user from creating unlimited tasks by implementing task limits based on the user's plan. The task limits are defined in the `TASK_LIMITS` dictionary, which maps plan tiers to their respective task limits. When a user attempts to create a task, the system checks if they have exceeded their task limit for the current plan. If they have, the task creation is rejected.\n\nAdditionally, the system validates task creation by checking the user's role and permissions. Only users with the `task:create` permission can create tasks. This ensures that users with lower permissions cannot create tasks that they are not authorized to manage.\n\nTherefore, the system prevents a user from creating unlimited tasks by implementing task limits and validating task creation based on user permissions.",
+    "contexts": [
+      "limit = TASK_LIMITS.get(plan, TASK_LIMITS[PlanTier.FREE.value])\n\nlimit = TASK_LIMITS.get(plan, TASK_LIMITS[PlanTier.FREE.value])",
+      "limit = TASK_LIMITS.get(plan, TASK_LIMITS[PlanTier.FREE.value])\n\nlimit = TASK_LIMITS.get(plan, TASK_LIMITS[PlanTier.FREE.value])",
+      "tasks.create_task(alice_token, \"Write unit tests\", \"Cover auth and task_service modules\", Priority.MEDIUM,\n\nRole.ADMIN.value: {\n        \"task:create\", \"task:complete\", \"task:delete\", \"task:view\",",
+      "tasks.create_task(alice_token, \"Write unit tests\", \"Cover auth and task_service modules\", Priority.MEDIUM,\n\nRole.ADMIN.value: {\n        \"task:create\", \"task:complete\", \"task:delete\", \"task:view\","
+    ]
+  },
+  "Find every place BillingError is raised in the codebase.": {
+    "answer": "Model call limits exceeded: run limit (5/5)",
+    "contexts": [
+      "class BillingError(Exception):\n    pass\n\nraise BillingError(\n                f\"Task limit reached for plan '{plan}': {current_count}/{limit}. \"",
+      "class BillingError(Exception):\n    pass\n\nraise BillingError(\n                f\"Task limit reached for plan '{plan}': {current_count}/{limit}. \"",
+      "class BillingError(Exception):\n    pass\n\nraise BillingError(\n                f\"Task limit reached for plan '{plan}': {current_count}/{limit}. \"",
+      "class BillingError(Exception):\n    pass\n\nraise BillingError(\n                f\"Task limit reached for plan '{plan}': {current_count}/{limit}. \"",
+      "class BillingError(Exception):\n    pass\n\nraise BillingError(\n                f\"Task limit reached for plan '{plan}': {current_count}/{limit}. \""
+    ]
+  },
+  "Where is _user_plans defined and what does it store?": {
+    "answer": "Not found",
+    "contexts": [
+      "# In-memory plan store: user_id \u2192 plan_tier\n_user_plans: dict[int, str] = {}\n\ndef assign_plan(self, user: User, plan: PlanTier) -> None:\n        _user_plans[user.id] = plan.value",
+      "# In-memory plan store: user_id \u2192 plan_tier\n_user_plans: dict[int, str] = {}\n\ndef assign_plan(self, user: User, plan: PlanTier) -> None:\n        _user_plans[user.id] = plan.value"
+    ]
+  },
+  "Which file imports both Task and Status?": {
+    "answer": "Not found",
+    "contexts": [
+      "if task:\n            task.status = status\n        return task\n\ncompleted_tasks=by_status.get(Status.DONE.value, 0),\n            tasks_by_status=by_status,",
+      "if task:\n            task.status = status\n        return task\n\ncompleted_tasks=by_status.get(Status.DONE.value, 0),\n            tasks_by_status=by_status,"
+    ]
+  },
+  "Find every place AuditEventType.PERMISSION_DENIED is recorded.": {
+    "answer": "Not found",
+    "contexts": [
+      "PERMISSION_DENIED = \"permission_denied\"\n\nexcept Exception:\n                self.audit.record(\n                    AuditEventType.PERMISSION_DENIED,",
+      "PERMISSION_DENIED = \"permission_denied\"\n\nexcept Exception:\n                self.audit.record(\n                    AuditEventType.PERMISSION_DENIED,",
+      "PERMISSION_DENIED = \"permission_denied\"\n\nexcept Exception:\n                self.audit.record(\n                    AuditEventType.PERMISSION_DENIED,"
+    ]
+  },
+  "Which methods in the codebase check is_active before proceeding?": {
+    "answer": "Model call limits exceeded: run limit (5/5)",
+    "contexts": [
+      "is_active: bool = True\n\nself._schedules[schedule_id].is_active = False",
+      "is_active: bool = True\n\nself._schedules[schedule_id].is_active = False",
+      "is_active: bool = True\n\nself._schedules[schedule_id].is_active = False",
+      "is_active: bool = True\n\nself._schedules[schedule_id].is_active = False",
+      "is_active: bool = True\n\nself._schedules[schedule_id].is_active = False"
+    ]
+  },
+  "What are all the methods inside AuthService?": {
+    "answer": "Not found",
+    "contexts": [
+      "self.billing = billing\n        self.audit = audit\n        self.notifications = notifications\n\nclass AuthService:\n    \"\"\"Handles login and basic access control.\"\"\"",
+      "self.billing = billing\n        self.audit = audit\n        self.notifications = notifications\n\nclass AuthService:\n    \"\"\"Handles login and basic access control.\"\"\""
+    ]
+  },
+  "What are all the methods inside TaskService?": {
+    "answer": "Not found.",
+    "contexts": [
+      "Called by TaskService after every state-changing operation.\n\"\"\"\n\nclass TaskService:\n    \"\"\"All task operations go through here so no check is ever skipped.\"\"\"",
+      "Called by TaskService after every state-changing operation.\n\"\"\"\n\nclass TaskService:\n    \"\"\"All task operations go through here so no check is ever skipped.\"\"\""
+    ]
+  },
+  "What fields does the Task dataclass have?": {
+    "answer": "Not found",
+    "contexts": [
+      "@dataclass\n\n@dataclass",
+      "@dataclass\n\n@dataclass",
+      "@dataclass\n\n@dataclass"
+    ]
+  },
+  "Trace the complete call chain when create_task is called \u2014 list every method invoked across all files in order.": {
+    "answer": "The complete call chain when `create_task` is called is:\n\n1. `create_task` function is called with the required parameters.\n2. The `create_task` function calls the `task` function to create a new task.\n3. The `task` function calls the `Task` class constructor to create a new task object.\n4. The `Task` class constructor calls the `__init__` method to initialize the task object.\n5. The `__init__` method calls the `save` method to save the task object to the database.\n6. The `save` method calls the `insert` method to insert the task object into the database.\n7. The `insert` method calls the `execute` method to execute the SQL query to insert the task object into the database.\n8. The `execute` method calls the `commit` method to commit the changes to the database.\n9. The `commit` method calls the `flush` method to flush the changes to the database.\n10. The `flush` method calls the `close` method to close the database connection.\n\nNote: The actual call chain may vary depending on the implementation of the `create_task` function and the `Task` class.",
+    "contexts": [
+      "created: list[Task] = []\n\n# Tasks\n    # ------------------------------------------------------------------",
+      "def create_task(\n        self,\n        token: str,\n        title: str,\n        description: str,\n\ncreated: list[Task] = []",
+      "def create_task(\n        self,\n        token: str,\n        title: str,\n        description: str,\n\ncreated: list[Task] = []",
+      "created: list[Task] = []\n\n)\n            created.append(task)",
+      "created: list[Task] = []\n\n)\n            created.append(task)",
+      "created: list[Task] = []\n\n# Tasks\n    # ------------------------------------------------------------------",
+      "# ------------------------------------------------------------------\n    # Tasks\n\ncreated: list[Task] = []",
+      "created: list[Task] = []\n\n# Tasks\n    # ------------------------------------------------------------------",
+      "created: list[Task] = []\n\n# ------------------------------------------------------------------\n    # Tasks",
+      "created: list[Task] = []\n\n# ------------------------------------------------------------------\n    # Tasks",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n# ------------------------------------------------------------------\n    # Tasks",
+      ")\n            created.append(task)\n\n# Tasks\n    # ------------------------------------------------------------------",
+      ")\n            created.append(task)\n\n# Tasks\n    # ------------------------------------------------------------------",
+      ")\n            created.append(task)\n\n# Tasks\n    # ------------------------------------------------------------------",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\ncreated: list[Task] = []",
+      "# Tasks\n    # ------------------------------------------------------------------\n\ncreated: list[Task] = []",
+      "# Tasks\n    # ------------------------------------------------------------------\n\ncreated: list[Task] = []",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n)\n            created.append(task)"
+    ]
+  },
+  "If complete_task is called with an expired session token, trace the full call chain and identify exactly where and how it fails.": {
+    "answer": "The `complete_task` function fails when called with an expired session token because of the following reasons:\n\n1. The `complete_task` function first checks if the user ID is None. If it is, it raises an `AuthError` with the message \"Invalid or expired session token\".\n2. The `get_current_user` function is called with the token to get the current user. If the token is expired, this function will return None.\n3. The `require` function is called with the user and the permission \"task:complete\". If the user is None, this function will raise an error.\n\nTherefore, the `complete_task` function fails when called with an expired session token because the `get_current_user` function returns None, which is then passed to the `require` function, causing it to raise an error.",
+    "contexts": [
+      "if user_id is None:\n            raise AuthError(\"Invalid or expired session token\")\n\nuser = self.auth.get_current_user(token)\n        self.policy.require(user, \"task:complete\")",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n# ------------------------------------------------------------------\n    # Tasks",
+      "user = self.auth.get_current_user(token)\n        self.policy.require(user, \"task:complete\")\n\nuser = self.auth.get_current_user(token)\n        self.policy.require(user, \"task:create\")",
+      "# Tasks\n    # ------------------------------------------------------------------\n\n# ------------------------------------------------------------------\n    # Tasks",
+      "user = self.auth.get_current_user(token)\n        self.policy.require(user, \"task:complete\")\n\nuser = self.auth.get_current_user(token)\n        self.policy.require(user, \"task:create\")",
+      "if user_id is None:\n            raise AuthError(\"Invalid or expired session token\")\n\nuser = self.auth.get_current_user(token)\n        self.policy.require(user, \"task:complete\")",
+      "if user_id is None:\n            raise AuthError(\"Invalid or expired session token\")\n\nuser = self.auth.get_current_user(token)\n        self.policy.require(user, \"task:complete\")",
+      "def login(self, email: str, password: str) -> str:\n        \"\"\"\n        Validate credentials and return a session token.\n\nself._sessions[token] = user.id\n        return token",
+      "user = self.auth.get_current_user(token)\n        self.policy.require(user, \"task:complete\")\n\ntasks.complete_task(alice_token, alice_tasks[0].id)",
+      "if user_id is None:\n            raise AuthError(\"Invalid or expired session token\")\n\ndef logout(self, token: str) -> None:\n        \"\"\"Invalidate a session token.\"\"\"\n        self._sessions.pop(token, None)",
+      "if user_id is None:\n            raise AuthError(\"Invalid or expired session token\")\n\ndef logout(self, token: str) -> None:\n        \"\"\"Invalidate a session token.\"\"\"\n        self._sessions.pop(token, None)",
+      "user = self.auth.get_current_user(token)\n        self.policy.require(user, \"task:complete\")\n\ntasks.complete_task(alice_token, alice_tasks[0].id)",
+      "user = self.auth.get_current_user(token)\n        self.policy.require(user, \"task:complete\")\n\ntasks.complete_task(alice_token, alice_tasks[0].id)",
+      "if user_id is None:\n            raise AuthError(\"Invalid or expired session token\")\n\ndef logout(self, token: str) -> None:\n        \"\"\"Invalidate a session token.\"\"\"\n        self._sessions.pop(token, None)",
+      "if user_id is None:\n            raise AuthError(\"Invalid or expired session token\")\n\ndef logout(self, token: str) -> None:\n        \"\"\"Invalidate a session token.\"\"\"\n        self._sessions.pop(token, None)",
+      "if user_id is None:\n            raise AuthError(\"Invalid or expired session token\")\n\ndef logout(self, token: str) -> None:\n        \"\"\"Invalidate a session token.\"\"\"\n        self._sessions.pop(token, None)",
+      "if user_id is None:\n            raise AuthError(\"Invalid or expired session token\")\n\nuser = self.auth.get_current_user(token)\n        self.policy.require(user, \"task:complete\")",
+      "if user_id is None:\n            raise AuthError(\"Invalid or expired session token\")\n\ndef logout(self, token: str) -> None:\n        \"\"\"Invalidate a session token.\"\"\"\n        self._sessions.pop(token, None)",
+      "if user_id is None:\n            raise AuthError(\"Invalid or expired session token\")\n\ndef logout(self, token: str) -> None:\n        \"\"\"Invalidate a session token.\"\"\"\n        self._sessions.pop(token, None)",
+      "if user_id is None:\n            raise AuthError(\"Invalid or expired session token\")\n\ndef logout(self, token: str) -> None:\n        \"\"\"Invalidate a session token.\"\"\"\n        self._sessions.pop(token, None)",
+      "if user_id is None:\n            raise AuthError(\"Invalid or expired session token\")\n\nuser = self.auth.get_current_user(token)\n        self.policy.require(user, \"task:complete\")",
+      "if user_id is None:\n            raise AuthError(\"Invalid or expired session token\")\n\ndef logout(self, token: str) -> None:\n        \"\"\"Invalidate a session token.\"\"\"\n        self._sessions.pop(token, None)",
+      "if user_id is None:\n            raise AuthError(\"Invalid or expired session token\")\n\ndef logout(self, token: str) -> None:\n        \"\"\"Invalidate a session token.\"\"\"\n        self._sessions.pop(token, None)",
+      "if user_id is None:\n            raise AuthError(\"Invalid or expired session token\")\n\ndef logout(self, token: str) -> None:\n        \"\"\"Invalidate a session token.\"\"\"\n        self._sessions.pop(token, None)",
+      "if user_id is None:\n            raise AuthError(\"Invalid or expired session token\")\n\ndef logout(self, token: str) -> None:\n        \"\"\"Invalidate a session token.\"\"\"\n        self._sessions.pop(token, None)",
+      "if user_id is None:\n            raise AuthError(\"Invalid or expired session token\")\n\ndef logout(self, token: str) -> None:\n        \"\"\"Invalidate a session token.\"\"\"\n        self._sessions.pop(token, None)",
+      "if user_id is None:\n            raise AuthError(\"Invalid or expired session token\")\n\ndef logout(self, token: str) -> None:\n        \"\"\"Invalidate a session token.\"\"\"\n        self._sessions.pop(token, None)",
+      "if user_id is None:\n            raise AuthError(\"Invalid or expired session token\")\n\ndef logout(self, token: str) -> None:\n        \"\"\"Invalidate a session token.\"\"\"\n        self._sessions.pop(token, None)",
+      "if user_id is None:\n            raise AuthError(\"Invalid or expired session token\")\n\ndef logout(self, token: str) -> None:\n        \"\"\"Invalidate a session token.\"\"\"\n        self._sessions.pop(token, None)"
+    ]
+  },
+  "If a user's account is deactivated (is_active = False), which specific service methods would they be blocked from calling?": {
+    "answer": "Not found",
+    "contexts": [
+      "raise AuthError(\"User account is inactive\")\n        return user\n\nUSER_DEACTIVATED = \"user_deactivated\"\n    LOGIN_SUCCESS = \"login_success\"\n    LOGIN_FAILURE = \"login_failure\"",
+      "raise AuthError(\"User account is inactive\")\n        return user\n\nUSER_DEACTIVATED = \"user_deactivated\"\n    LOGIN_SUCCESS = \"login_success\"\n    LOGIN_FAILURE = \"login_failure\"",
+      "raise AuthError(\"User account is inactive\")\n        return user\n\nUSER_DEACTIVATED = \"user_deactivated\"\n    LOGIN_SUCCESS = \"login_success\"\n    LOGIN_FAILURE = \"login_failure\""
+    ]
+  },
+  "Which TaskService methods check that the requesting user owns the task before proceeding?": {
+    "answer": "The TaskService methods that check that the requesting user owns the task before proceeding are:\n\n- `complete_task`\n- `delete_task`\n- `update_task` \n\nThese methods check if the task's owner_id matches the user's id before allowing the task to be completed, deleted, or updated.",
+    "contexts": [
+      "Updates owner_id so the new owner passes future ownership checks.\n        \"\"\"\n        user = self.auth.get_current_user(token)\n        self.policy.require(user, \"task:assign\")\n        task = self.db.get_task(task_id)\n        if task is None:\n\n) -> Task:\n        \"\"\"Create a task owned by the currently logged-in user.\"\"\"\n        user = self.auth.get_current_user(token)\n        self.policy.require(user, \"task:create\")\n        self.billing.check_task_limit(user)\n\nclass TaskService:\n    \"\"\"All task operations go through here so no check is ever skipped.\"\"\"\n\ntask = self.db.get_task(task_id)\n        if task is None:\n            raise ValueError(f\"Task {task_id} not found\")\n        if task.owner_id != user.id:\n            raise AuthError(\"You can only complete your own tasks\")",
+      "class TaskService:\n    \"\"\"All task operations go through here so no check is ever skipped.\"\"\"\n\ntask = self.db.get_task(task_id)\n        if task is None:\n            raise ValueError(f\"Task {task_id} not found\")\n        if task.owner_id != user.id:\n            raise AuthError(\"You can only complete your own tasks\")\n\nUpdates owner_id so the new owner passes future ownership checks.\n        \"\"\"\n        user = self.auth.get_current_user(token)\n        self.policy.require(user, \"task:assign\")\n        task = self.db.get_task(task_id)\n        if task is None:\n\ntask = self.db.get_task(task_id)\n        if task is None:\n            raise ValueError(f\"Task {task_id} not found\")\n        if task.owner_id != user.id:\n            raise AuthError(\"You can only delete your own tasks\")",
+      "Updates owner_id so the new owner passes future ownership checks.\n        \"\"\"\n        user = self.auth.get_current_user(token)\n        self.policy.require(user, \"task:assign\")\n        task = self.db.get_task(task_id)\n        if task is None:\n\nclass TaskService:\n    \"\"\"All task operations go through here so no check is ever skipped.\"\"\"\n\ntask = self.db.get_task(task_id)\n        if task is None:\n            raise ValueError(f\"Task {task_id} not found\")\n        if task.owner_id != user.id:\n            raise AuthError(\"You can only complete your own tasks\")\n\n) -> Task:\n        \"\"\"Create a task owned by the currently logged-in user.\"\"\"\n        user = self.auth.get_current_user(token)\n        self.policy.require(user, \"task:create\")\n        self.billing.check_task_limit(user)"
+    ]
+  },
+  "What audit events are recorded across the entire task lifecycle?": {
+    "answer": "The audit events recorded across the entire task lifecycle include the following:\n\n1. **TASK_CREATED**: This event is logged when a task is created.\n2. **TASK_COMPLETED**: This event is logged when a task is completed.\n3. **TASK_DELETED**: This event is logged when a task is deleted.\n4. **TASK_ASSIGNED**: This event is logged when a task is assigned to a user.\n\nThese events are part of the `AuditEventType` enumeration defined in the codebase, specifically in the `audit_log.py` file, which maintains an append-only audit trail for all state-changing operations related to tasks and users.",
+    "contexts": [
+      "self.audit.record(\n            AuditEventType.TASK_CREATED,\n            actor_id=user.id,\n            target_id=task.id,\n            detail=f\"title='{title}' priority='{priority.value}'\",\n        )\n\nclass AuditEventType(Enum):\n    TASK_CREATED = \"task_created\"\n    TASK_COMPLETED = \"task_completed\"\n    TASK_DELETED = \"task_deleted\"\n    TASK_ASSIGNED = \"task_assigned\"\n    USER_REGISTERED = \"user_registered\"\n    USER_DEACTIVATED = \"user_deactivated\"\n\n)\n            self.audit.record(\n                AuditEventType.TASK_CREATED,\n                actor_id=owner.id,\n                target_id=task.id,\n                detail=f\"Created by scheduler schedule_id={schedule.id}\",\n            )\n\n\"\"\"\naudit_log.py \u2014 Append-only audit trail for all state-changing operations.\nEvery create / update / delete action on tasks and users is recorded here.\n\"\"\""
+    ]
+  },
+  "What notifications are sent when a task is assigned to a new user?": {
+    "answer": "When a task is assigned to a new user, the following notifications are sent:\n\n1. **Email Notification**: An email is sent to the assignee with the subject \"Task assigned to you: {task.title}\". The body of the email includes a message informing the assignee that the task has been assigned to them by the assigner.\n\n   - **Function**: `on_task_assigned`\n   - **Email Body**: \n     ```\n     Hi {assignee.username},\n\n     {assigner.username} assigned you the task '{task.title}'.\n     ```\n\n2. **Slack Notification**: A notification is also posted to Slack, although the specific details of the Slack message are not fully visible in the code snippet.\n\nThese notifications ensure that the assignee is promptly informed about the new task assignment.",
+    "contexts": [
+      ")\n        self.notifications.on_task_assigned(task, assignee, user)\n        return task\n\ndef on_task_assigned(self, task: Task, assignee: User, assigner: User) -> None:\n        self.email.send(EmailMessage(\n            to_address=assignee.email,\n            subject=f\"Task assigned to you: {task.title}\",\n            body=(\n\n)\n        self.notifications.on_task_created(task, user)\n        return task\n\nbody=(\n                f\"Hi {assignee.username},\\n\\n\"\n                f\"{assigner.username} assigned you the task '{task.title}'.\\n\"\n            ),\n        ))\n        self.slack.post("
+    ]
+  }
+}

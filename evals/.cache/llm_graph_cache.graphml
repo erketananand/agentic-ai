@@ -1,0 +1,965 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d0" for="edge" attr.name="relation" attr.type="string" />
+  <graph edgedefault="directed">
+    <node id="audit_log" />
+    <node id="dataclasses" />
+    <node id="datetime" />
+    <node id="enum" />
+    <node id="typing" />
+    <node id="AuditEventType" />
+    <node id="TASK_CREATED" />
+    <node id="TASK_COMPLETED" />
+    <node id="TASK_DELETED" />
+    <node id="TASK_ASSIGNED" />
+    <node id="USER_REGISTERED" />
+    <node id="USER_DEACTIVATED" />
+    <node id="LOGIN_SUCCESS" />
+    <node id="LOGIN_FAILURE" />
+    <node id="PERMISSION_DENIED" />
+    <node id="AuditEntry" />
+    <node id="event_type" />
+    <node id="actor_id" />
+    <node id="target_id" />
+    <node id="detail" />
+    <node id="timestamp" />
+    <node id="AuditLogger" />
+    <node id="__init__" />
+    <node id="datetime.utcnow" />
+    <node id="record" />
+    <node id="get_events_for_user" />
+    <node id="get_events_for_target" />
+    <node id="get_events_by_type" />
+    <node id="all_entries" />
+    <node id="auth.py" />
+    <node id="database.Database" />
+    <node id="models.User" />
+    <node id="AuthService.__init__" />
+    <node id="AuthService.register" />
+    <node id="database.Database.get_user_by_email" />
+    <node id="database.Database.create_user" />
+    <node id="AuthService.login" />
+    <node id="AuthService.get_current_user" />
+    <node id="database.Database.get_user" />
+    <node id="AuthService.logout" />
+    <node id="AuthService._sessions.pop" />
+    <node id="billing.py" />
+    <node id="enum.Enum" />
+    <node id="PlanTier" />
+    <node id="PlanTier.FREE" />
+    <node id="PlanTier.PRO" />
+    <node id="PlanTier.ENTERPRISE" />
+    <node id="TASK_LIMITS" />
+    <node id="dict[str, int]" />
+    <node id="_user_plans" />
+    <node id="dict[int, str]" />
+    <node id="BillingError" />
+    <node id="BillingService" />
+    <node id="BillingService.__init__" />
+    <node id="BillingService.assign_plan" />
+    <node id="BillingService.get_plan" />
+    <node id="BillingService.check_task_limit" />
+    <node id="database.Database.list_tasks" />
+    <node id="BillingService.usage_summary" />
+    <node id="database.py" />
+    <node id="models" />
+    <node id="Database" />
+    <node id="create_user" />
+    <node id="get_user" />
+    <node id="get_user_by_email" />
+    <node id="list_users" />
+    <node id="create_task" />
+    <node id="get_task" />
+    <node id="update_task_status" />
+    <node id="list_tasks" />
+    <node id="delete_task" />
+    <node id="search_tasks" />
+    <node id="Database.__init__" />
+    <node id="User" />
+    <node id="Task" />
+    <node id="Database.create_user" />
+    <node id="Database.create_task" />
+    <node id="Database.update_task_status" />
+    <node id="Status" />
+    <node id="Database.list_tasks" />
+    <node id="Priority" />
+    <node id="Database.get_user_by_email" />
+    <node id="Database.search_tasks" />
+    <node id="integrations/email_client.py" />
+    <node id="EmailMessage" />
+    <node id="EmailClient" />
+    <node id="EmailClient.__init__" />
+    <node id="EmailClient.send" />
+    <node id="print" />
+    <node id="EmailClient.sent_messages" />
+    <node id="list" />
+    <node id="SlackWebhook" />
+    <node id="SlackWebhook.__init__" />
+    <node id="SlackWebhook.post" />
+    <node id="SlackWebhook.posted_messages" />
+    <node id="main" />
+    <node id="auth.AuthService" />
+    <node id="task_service.TaskService" />
+    <node id="permissions.PermissionPolicy" />
+    <node id="permissions.Role" />
+    <node id="billing.BillingService" />
+    <node id="billing.PlanTier" />
+    <node id="audit_log.AuditLogger" />
+    <node id="notifications.NotificationService" />
+    <node id="reports.ReportService" />
+    <node id="scheduler.TaskScheduler" />
+    <node id="scheduler.RecurrenceInterval" />
+    <node id="integrations.email_client.EmailClient" />
+    <node id="integrations.slack_webhook.SlackWebhook" />
+    <node id="models.Priority" />
+    <node id="main.main" />
+    <node id="database.Database.__init__" />
+    <node id="auth.AuthService.__init__" />
+    <node id="permissions.PermissionPolicy.__init__" />
+    <node id="billing.BillingService.__init__" />
+    <node id="audit_log.AuditLogger.__init__" />
+    <node id="integrations.email_client.EmailClient.__init__" />
+    <node id="integrations.slack_webhook.SlackWebhook.__init__" />
+    <node id="notifications.NotificationService.__init__" />
+    <node id="task_service.TaskService.__init__" />
+    <node id="reports.ReportService.__init__" />
+    <node id="scheduler.TaskScheduler.__init__" />
+    <node id="auth.AuthService.register" />
+    <node id="auth.AuthService.login" />
+    <node id="permissions.PermissionPolicy.assign_role" />
+    <node id="billing.BillingService.assign_plan" />
+    <node id="task_service.TaskService.create_task" />
+    <node id="task_service.TaskService.list_my_tasks" />
+    <node id="task_service.TaskService.complete_task" />
+    <node id="scheduler.TaskScheduler.add_schedule" />
+    <node id="reports.ReportService.system_report" />
+    <node id="audit_log.AuditLogger.all_entries" />
+    <node id="models.py" />
+    <node id="LOW" />
+    <node id="MEDIUM" />
+    <node id="HIGH" />
+    <node id="TODO" />
+    <node id="IN_PROGRESS" />
+    <node id="DONE" />
+    <node id="is_overdue" />
+    <node id="notifications.py" />
+    <node id="models.Task" />
+    <node id="integrations.email_client.EmailMessage" />
+    <node id="TaskService" />
+    <node id="NotificationService.on_task_created" />
+    <node id="NotificationService.on_task_completed" />
+    <node id="NotificationService.on_task_deleted" />
+    <node id="NotificationService.on_task_assigned" />
+    <node id="NotificationService.__init__" />
+    <node id="integrations.email_client.EmailClient.send" />
+    <node id="integrations.slack_webhook.SlackWebhook.post" />
+    <node id="permissions.py" />
+    <node id="permissions.py.Role" />
+    <node id="ADMIN" />
+    <node id="MEMBER" />
+    <node id="VIEWER" />
+    <node id="ROLE_PERMISSIONS" />
+    <node id="_user_roles" />
+    <node id="permissions.py.PermissionError" />
+    <node id="PermissionError" />
+    <node id="permissions.py.PermissionPolicy" />
+    <node id="PermissionPolicy" />
+    <node id="permissions.py.PermissionPolicy.assign_role" />
+    <node id="permissions.py.PermissionPolicy.get_role" />
+    <node id="_user_roles.get" />
+    <node id="permissions.py.PermissionPolicy.require" />
+    <node id="permissions.py.PermissionPolicy.can" />
+    <node id="ROLE_PERMISSIONS.get" />
+    <node id="reports.py" />
+    <node id="models.Status" />
+    <node id="UserReport" />
+    <node id="SystemReport" />
+    <node id="ReportService" />
+    <node id="ReportService.__init__" />
+    <node id="ReportService.user_report" />
+    <node id="permissions.PermissionPolicy.require" />
+    <node id="ReportService.system_report" />
+    <node id="database.Database.list_users" />
+    <node id="scheduler.py" />
+    <node id="audit_log.AuditEventType" />
+    <node id="TaskScheduler" />
+    <node id="Database.get_user" />
+    <node id="AuditLogger.record" />
+    <node id="ScheduledTask" />
+    <node id="RecurrenceInterval" />
+    <node id="task_service.py" />
+    <node id="auth.AuthError" />
+    <node id="TaskService.__init__" />
+    <node id="TaskService.create_task" />
+    <node id="auth.AuthService.get_current_user" />
+    <node id="billing.BillingService.check_task_limit" />
+    <node id="database.Database.create_task" />
+    <node id="audit_log.AuditLogger.record" />
+    <node id="notifications.NotificationService.on_task_created" />
+    <node id="TaskService.complete_task" />
+    <node id="database.Database.get_task" />
+    <node id="database.Database.update_task_status" />
+    <node id="notifications.NotificationService.on_task_completed" />
+    <node id="TaskService.list_my_tasks" />
+    <node id="TaskService.delete_task" />
+    <node id="database.Database.delete_task" />
+    <node id="notifications.NotificationService.on_task_deleted" />
+    <node id="TaskService.assign_task" />
+    <node id="notifications.NotificationService.on_task_assigned" />
+    <node id="TaskService.search_tasks" />
+    <node id="database.Database.search_tasks" />
+    <edge source="audit_log" target="dataclasses">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="audit_log" target="datetime">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="audit_log" target="enum">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="audit_log" target="typing">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="AuditEventType" target="TASK_CREATED">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="AuditEventType" target="TASK_COMPLETED">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="AuditEventType" target="TASK_DELETED">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="AuditEventType" target="TASK_ASSIGNED">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="AuditEventType" target="USER_REGISTERED">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="AuditEventType" target="USER_DEACTIVATED">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="AuditEventType" target="LOGIN_SUCCESS">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="AuditEventType" target="LOGIN_FAILURE">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="AuditEventType" target="PERMISSION_DENIED">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="AuditEntry" target="event_type">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="AuditEntry" target="actor_id">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="AuditEntry" target="target_id">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="AuditEntry" target="detail">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="AuditEntry" target="timestamp">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="AuditLogger" target="__init__">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="AuditLogger" target="AuditEntry">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="AuditLogger" target="datetime.utcnow">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="AuditLogger" target="record">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="AuditLogger" target="get_events_for_user">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="AuditLogger" target="get_events_for_target">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="AuditLogger" target="get_events_by_type">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="AuditLogger" target="all_entries">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="auth.py" target="database.Database">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="auth.py" target="models.User">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="AuthService.__init__" target="database.Database">
+      <data key="d0">DEPENDS_ON</data>
+    </edge>
+    <edge source="AuthService.register" target="database.Database.get_user_by_email">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="AuthService.register" target="database.Database.create_user">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="AuthService.login" target="database.Database.get_user_by_email">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="AuthService.get_current_user" target="database.Database.get_user">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="AuthService.logout" target="AuthService._sessions.pop">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="billing.py" target="enum.Enum">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="billing.py" target="models.User">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="billing.py" target="database.Database">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="PlanTier" target="PlanTier.FREE">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="PlanTier" target="PlanTier.PRO">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="PlanTier" target="PlanTier.ENTERPRISE">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="TASK_LIMITS" target="dict[str, int]">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="_user_plans" target="dict[int, str]">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="BillingError" target="BillingError">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="BillingService" target="BillingService">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="BillingService.__init__" target="database.Database">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="BillingService.assign_plan" target="_user_plans">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="BillingService.get_plan" target="_user_plans">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="BillingService.check_task_limit" target="BillingService.get_plan">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="BillingService.check_task_limit" target="database.Database.list_tasks">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="BillingService.usage_summary" target="BillingService.get_plan">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="BillingService.usage_summary" target="database.Database.list_tasks">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="database.py" target="models">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="Database" target="__init__">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="Database" target="create_user">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="Database" target="get_user">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="Database" target="get_user_by_email">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="Database" target="list_users">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="Database" target="create_task">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="Database" target="get_task">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="Database" target="update_task_status">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="Database" target="list_tasks">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="Database" target="delete_task">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="Database" target="search_tasks">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="Database.__init__" target="User">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="Database.__init__" target="Task">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="User" target="User">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="Task" target="Task">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="Task" target="User">
+      <data key="d0">DEPENDS_ON</data>
+    </edge>
+    <edge source="Task" target="is_overdue">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="Database.create_user" target="User">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="Database.create_task" target="Task">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="Database.create_task" target="Priority">
+      <data key="d0">DEPENDS_ON</data>
+    </edge>
+    <edge source="Database.update_task_status" target="Status">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="Status" target="TODO">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="Status" target="IN_PROGRESS">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="Status" target="DONE">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="Database.list_tasks" target="User">
+      <data key="d0">DEPENDS_ON</data>
+    </edge>
+    <edge source="Database.list_tasks" target="Task">
+      <data key="d0">DEPENDS_ON</data>
+    </edge>
+    <edge source="Priority" target="LOW">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="Priority" target="MEDIUM">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="Priority" target="HIGH">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="Database.get_user_by_email" target="User">
+      <data key="d0">DEPENDS_ON</data>
+    </edge>
+    <edge source="Database.search_tasks" target="Task">
+      <data key="d0">DEPENDS_ON</data>
+    </edge>
+    <edge source="integrations/email_client.py" target="dataclasses">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="EmailMessage" target="EmailMessage">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="EmailClient" target="EmailClient">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="EmailClient.__init__" target="EmailMessage">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="EmailClient.send" target="EmailMessage">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="EmailClient.send" target="print">
+      <data key="d0">USES</data>
+    </edge>
+    <edge source="EmailClient.sent_messages" target="list">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="SlackWebhook" target="SlackWebhook">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="SlackWebhook.__init__" target="print">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="SlackWebhook.post" target="print">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="SlackWebhook.posted_messages" target="list">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="main" target="database.Database">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="main" target="auth.AuthService">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="main" target="task_service.TaskService">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="main" target="permissions.PermissionPolicy">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="main" target="permissions.Role">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="main" target="billing.BillingService">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="main" target="billing.PlanTier">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="main" target="audit_log.AuditLogger">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="main" target="notifications.NotificationService">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="main" target="reports.ReportService">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="main" target="scheduler.TaskScheduler">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="main" target="scheduler.RecurrenceInterval">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="main" target="integrations.email_client.EmailClient">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="main" target="integrations.slack_webhook.SlackWebhook">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="main" target="models.Priority">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="main" target="main.main">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="auth.AuthService" target="auth.AuthService.register">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="auth.AuthService" target="auth.AuthService.login">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="task_service.TaskService" target="task_service.TaskService.create_task">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="task_service.TaskService" target="task_service.TaskService.list_my_tasks">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="task_service.TaskService" target="task_service.TaskService.complete_task">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="permissions.PermissionPolicy" target="permissions.PermissionPolicy.assign_role">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="billing.BillingService" target="billing.BillingService.assign_plan">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="audit_log.AuditLogger" target="audit_log.AuditLogger.all_entries">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="reports.ReportService" target="reports.ReportService.system_report">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="scheduler.TaskScheduler" target="scheduler.TaskScheduler.add_schedule">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="main.main" target="database.Database.__init__">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="main.main" target="auth.AuthService.__init__">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="main.main" target="permissions.PermissionPolicy.__init__">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="main.main" target="billing.BillingService.__init__">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="main.main" target="audit_log.AuditLogger.__init__">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="main.main" target="integrations.email_client.EmailClient.__init__">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="main.main" target="integrations.slack_webhook.SlackWebhook.__init__">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="main.main" target="notifications.NotificationService.__init__">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="main.main" target="task_service.TaskService.__init__">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="main.main" target="reports.ReportService.__init__">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="main.main" target="scheduler.TaskScheduler.__init__">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="models.py" target="dataclasses">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="models.py" target="datetime">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="models.py" target="enum">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="models.py" target="typing">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="notifications.py" target="models.Task">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="notifications.py" target="models.User">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="notifications.py" target="integrations.email_client.EmailClient">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="notifications.py" target="integrations.email_client.EmailMessage">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="notifications.py" target="integrations.slack_webhook.SlackWebhook">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="TaskService" target="NotificationService.on_task_created">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService" target="NotificationService.on_task_completed">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService" target="NotificationService.on_task_deleted">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService" target="NotificationService.on_task_assigned">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="NotificationService.on_task_created" target="integrations.email_client.EmailClient.send">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="NotificationService.on_task_created" target="integrations.slack_webhook.SlackWebhook.post">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="NotificationService.on_task_completed" target="integrations.email_client.EmailClient.send">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="NotificationService.on_task_completed" target="integrations.slack_webhook.SlackWebhook.post">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="NotificationService.on_task_deleted" target="integrations.slack_webhook.SlackWebhook.post">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="NotificationService.on_task_assigned" target="integrations.email_client.EmailClient.send">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="NotificationService.on_task_assigned" target="integrations.slack_webhook.SlackWebhook.post">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="NotificationService.__init__" target="integrations.email_client.EmailClient">
+      <data key="d0">DEPENDS_ON</data>
+    </edge>
+    <edge source="NotificationService.__init__" target="integrations.slack_webhook.SlackWebhook">
+      <data key="d0">DEPENDS_ON</data>
+    </edge>
+    <edge source="permissions.py" target="enum">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="permissions.py" target="models.User">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="permissions.py" target="ROLE_PERMISSIONS">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="permissions.py" target="_user_roles">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="permissions.py.Role" target="ADMIN">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="permissions.py.Role" target="MEMBER">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="permissions.py.Role" target="VIEWER">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="permissions.py.PermissionError" target="PermissionError">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="permissions.py.PermissionPolicy" target="PermissionPolicy">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="permissions.py.PermissionPolicy.assign_role" target="_user_roles">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="permissions.py.PermissionPolicy.get_role" target="_user_roles.get">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="permissions.py.PermissionPolicy.require" target="PermissionError">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="permissions.py.PermissionPolicy.can" target="ROLE_PERMISSIONS.get">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="reports.py" target="dataclasses">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="reports.py" target="models.Status">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="reports.py" target="models.Priority">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="reports.py" target="database.Database">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="reports.py" target="permissions.PermissionPolicy">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="reports.py" target="models.User">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="UserReport" target="UserReport">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="SystemReport" target="SystemReport">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="ReportService" target="ReportService">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="ReportService.__init__" target="database.Database">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="ReportService.__init__" target="permissions.PermissionPolicy">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="ReportService.user_report" target="permissions.PermissionPolicy.require">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="ReportService.user_report" target="database.Database.get_user">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="ReportService.user_report" target="database.Database.list_tasks">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="ReportService.user_report" target="models.Priority">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="ReportService.user_report" target="UserReport">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="ReportService.system_report" target="permissions.PermissionPolicy.require">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="ReportService.system_report" target="database.Database.list_tasks">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="ReportService.system_report" target="database.Database.list_users">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="ReportService.system_report" target="models.Status">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="ReportService.system_report" target="models.Priority">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="ReportService.system_report" target="SystemReport">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="scheduler.py" target="models.Priority">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="scheduler.py" target="models.Task">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="scheduler.py" target="models.User">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="scheduler.py" target="database.Database">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="scheduler.py" target="billing.BillingService">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="scheduler.py" target="audit_log.AuditLogger">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="scheduler.py" target="audit_log.AuditEventType">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="TaskScheduler" target="Database">
+      <data key="d0">DEPENDS_ON</data>
+    </edge>
+    <edge source="TaskScheduler" target="BillingService">
+      <data key="d0">DEPENDS_ON</data>
+    </edge>
+    <edge source="TaskScheduler" target="AuditLogger">
+      <data key="d0">DEPENDS_ON</data>
+    </edge>
+    <edge source="TaskScheduler" target="Database.get_user">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskScheduler" target="BillingService.check_task_limit">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskScheduler" target="Database.create_task">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskScheduler" target="AuditLogger.record">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="ScheduledTask" target="ScheduledTask">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="RecurrenceInterval" target="RecurrenceInterval">
+      <data key="d0">DEFINES</data>
+    </edge>
+    <edge source="task_service.py" target="database.Database">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="task_service.py" target="models.Task">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="task_service.py" target="models.Priority">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="task_service.py" target="models.Status">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="task_service.py" target="auth.AuthService">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="task_service.py" target="auth.AuthError">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="task_service.py" target="permissions.PermissionPolicy">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="task_service.py" target="billing.BillingService">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="task_service.py" target="audit_log.AuditLogger">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="task_service.py" target="audit_log.AuditEventType">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="task_service.py" target="notifications.NotificationService">
+      <data key="d0">IMPORTS</data>
+    </edge>
+    <edge source="TaskService.__init__" target="database.Database">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.__init__" target="auth.AuthService">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.__init__" target="permissions.PermissionPolicy">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.__init__" target="billing.BillingService">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.__init__" target="audit_log.AuditLogger">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.__init__" target="notifications.NotificationService">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.create_task" target="auth.AuthService.get_current_user">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.create_task" target="permissions.PermissionPolicy.require">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.create_task" target="billing.BillingService.check_task_limit">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.create_task" target="database.Database.create_task">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.create_task" target="audit_log.AuditLogger.record">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.create_task" target="notifications.NotificationService.on_task_created">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.complete_task" target="auth.AuthService.get_current_user">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.complete_task" target="permissions.PermissionPolicy.require">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.complete_task" target="database.Database.get_task">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.complete_task" target="database.Database.update_task_status">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.complete_task" target="audit_log.AuditLogger.record">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.complete_task" target="notifications.NotificationService.on_task_completed">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.list_my_tasks" target="auth.AuthService.get_current_user">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.list_my_tasks" target="permissions.PermissionPolicy.require">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.list_my_tasks" target="database.Database.list_tasks">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.delete_task" target="auth.AuthService.get_current_user">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.delete_task" target="permissions.PermissionPolicy.require">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.delete_task" target="database.Database.get_task">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.delete_task" target="database.Database.delete_task">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.delete_task" target="audit_log.AuditLogger.record">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.delete_task" target="notifications.NotificationService.on_task_deleted">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.assign_task" target="auth.AuthService.get_current_user">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.assign_task" target="permissions.PermissionPolicy.require">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.assign_task" target="database.Database.get_task">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.assign_task" target="database.Database.get_user">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.assign_task" target="audit_log.AuditLogger.record">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.assign_task" target="notifications.NotificationService.on_task_assigned">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.search_tasks" target="auth.AuthService.get_current_user">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.search_tasks" target="permissions.PermissionPolicy.require">
+      <data key="d0">CALLS</data>
+    </edge>
+    <edge source="TaskService.search_tasks" target="database.Database.search_tasks">
+      <data key="d0">CALLS</data>
+    </edge>
+  </graph>
+</graphml>
