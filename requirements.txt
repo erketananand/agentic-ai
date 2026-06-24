@@ -12,3 +12,4 @@ rank_bm25
 langchain_classic
 langchain_google_vertexai
 ragas
+langgraph-checkpoint-sqlite
